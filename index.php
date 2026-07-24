@@ -10,6 +10,7 @@ $experiences = load_json('experiences.json');
 $projects    = load_json('projects.json');
 $skills      = load_json('skills.json');
 $education   = load_json('education.json');
+$faq         = load_json('faq.json');
 
 include __DIR__ . '/includes/head.php';
 include __DIR__ . '/includes/nav.php';
@@ -30,6 +31,9 @@ if ($skills) {
 }
 if ($education) {
     include __DIR__ . '/includes/education.php';
+}
+if ($faq) {
+    include __DIR__ . '/includes/faq.php';
 }
 
 include __DIR__ . '/includes/contact.php';

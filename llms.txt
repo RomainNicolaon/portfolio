@@ -1,0 +1,28 @@
+# Romain NICOLAON — Développeur Full-Stack
+
+> Portfolio de Romain NICOLAON, développeur web full-stack basé à Bourges (France). Conception d'applications web modernes et performantes en PHP, JavaScript/TypeScript, Symfony, Laravel, Vue.js, React et Node.js, avec un intérêt marqué pour Linux, le DevOps et l'open source.
+
+## À propos
+
+- Développeur full-stack avec plusieurs années d'expérience dans la conception d'applications web modernes.
+- Spécialisé dans la transformation de problèmes complexes en solutions simples, avec une attention à la performance, la maintenabilité et l'expérience utilisateur.
+- Actuellement Développeur Web Full Stack chez Inleed (Bourges, France).
+
+## Compétences
+
+- Langages : PHP, JavaScript, TypeScript, SQL, Bash, HTML, CSS, Python, C#
+- Frameworks & librairies : Symfony, Laravel, Vue.js, React, Tailwind CSS, Node.js
+- Bases de données : PostgreSQL, MySQL, Redis, MongoDB
+- Outils & DevOps : Docker, Git, GitLab CI, Linux, Nginx, Composer
+
+## Liens
+
+- [Portfolio](https://nicolaon.fr/)
+- [GitHub](https://github.com/RomainNicolaon)
+- [LinkedIn](https://www.linkedin.com/in/romain-nicolaon/)
+
+## Contact
+
+- Email : nicolaon.romain@gmail.com
+- Localisation : Bourges, France
+- Disponibilité : ouvert aux opportunités

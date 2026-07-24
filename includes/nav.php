@@ -17,6 +17,7 @@
             <li><a href="#projects" class="text-term-muted transition-colors hover:text-term-bright">./projects</a></li>
             <li><a href="#skills" class="text-term-muted transition-colors hover:text-term-bright">./skills</a></li>
             <li><a href="#education" class="text-term-muted transition-colors hover:text-term-bright">./education</a></li>
+            <li><a href="#faq" class="text-term-muted transition-colors hover:text-term-bright">./faq</a></li>
             <li><a href="#contact" class="rounded border border-term-green px-3 py-1 text-term-bright transition-colors hover:bg-term-green hover:text-term-bg">./contact</a></li>
         </ul>
 

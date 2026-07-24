@@ -4,6 +4,7 @@ $profile     = $profile     ?? [];
 $skills      = $skills      ?? [];
 $education   = $education    ?? [];
 $experiences = $experiences ?? [];
+$faq         = $faq         ?? [];
 
 // --- Préparation des métadonnées SEO ---
 $seoName        = $profile['name'] ?? 'Portfolio';
@@ -60,6 +61,21 @@ if (!empty($profile['location'])) {
     ]);
 }
 
+// FAQ -> FAQPage
+$faqEntities = [];
+foreach (($faq ?? []) as $item) {
+    if (!empty($item['question']) && !empty($item['answer'])) {
+        $faqEntities[] = [
+            '@type'          => 'Question',
+            'name'           => $item['question'],
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text'  => $item['answer'],
+            ],
+        ];
+    }
+}
+
 // Graphe de données structurées Schema.org
 $person = array_filter([
     '@type'       => 'Person',
@@ -103,6 +119,16 @@ $structuredData = [
     ],
 ];
 
+if ($faqEntities) {
+    $structuredData['@graph'][] = [
+        '@type'      => 'FAQPage',
+        '@id'        => $seoUrl . '#faq',
+        'inLanguage' => 'fr-FR',
+        'isPartOf'   => ['@id' => $seoBase . '/#website'],
+        'mainEntity' => $faqEntities,
+    ];
+}
+
 $jsonLd = json_encode(
     $structuredData,
     JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
@@ -110,6 +136,7 @@ $jsonLd = json_encode(
 ?>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,8 +166,7 @@ $jsonLd = json_encode(
 
     <!-- Données structurées Schema.org -->
     <script type="application/ld+json">
-<?= $jsonLd ?>
-
+        <?= $jsonLd ?>
     </script>
 
     <!-- Fonts -->
@@ -170,7 +196,14 @@ $jsonLd = json_encode(
                         },
                     },
                     keyframes: {
-                        blink: { '0%,49%': { opacity: '1' }, '50%,100%': { opacity: '0' } },
+                        blink: {
+                            '0%,49%': {
+                                opacity: '1'
+                            },
+                            '50%,100%': {
+                                opacity: '0'
+                            }
+                        },
                     },
                     animation: {
                         blink: 'blink 1s step-end infinite',
@@ -183,5 +216,6 @@ $jsonLd = json_encode(
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%2322c55e'>&gt;_</text></svg>">
 </head>
+
 <body class="bg-term-bg text-term-muted font-mono antialiased selection:bg-term-green selection:text-term-bg">
     <div class="scanlines" aria-hidden="true"></div>
