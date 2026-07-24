@@ -1,0 +1,29 @@
+<?php /** @var array $skills */ $skills = $skills ?? []; ?>
+<section id="skills" class="border-t border-term-border py-20">
+    <div class="mx-auto max-w-5xl px-4">
+        <header class="reveal mb-10">
+            <p class="text-sm text-term-dim">
+                <span class="text-term-green">$</span> cat skills.md
+            </p>
+            <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// Compétences</h2>
+        </header>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+            <?php foreach ($skills as $group): ?>
+                <div class="reveal rounded-lg border border-term-border bg-term-panel p-5">
+                    <h3 class="mb-4 flex items-center gap-2 text-sm font-bold text-term-bright">
+                        <span class="text-term-green">##</span>
+                        <?= e($group['category'] ?? '') ?>
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <?php foreach (($group['items'] ?? []) as $item): ?>
+                            <span class="rounded border border-term-border bg-term-green/5 px-2.5 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright">
+                                <?= e($item) ?>
+                            </span>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>

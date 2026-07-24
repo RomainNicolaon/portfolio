@@ -1,0 +1,32 @@
+{
+  "name": "Romain NICOLAON",
+  "handle": "romain",
+  "host": "portfolio",
+  "title": "Développeur Full-Stack",
+  "taglines": [
+    "Je construis des applications web full stack performantes.",
+    "PHP · JavaScript · Linux · Open Source",
+    "Passionné par le code propre et les systèmes robustes."
+  ],
+  "location": "Bourges, France",
+  "available": true,
+  "about": [
+    "Développeur full-stack avec plusieurs années d'expérience dans la conception d'applications web modernes.",
+    "J'aime transformer des problèmes complexes en solutions simples et élégantes, avec une attention particulière portée à la performance, la maintenabilité et l'expérience utilisateur.",
+    "En dehors de mes projets, je contribue à des projets d'amis et j'apprends l'univers des systèmes Linux et de l'automatisation."
+  ],
+  "email": "nicolaon.romain@gmail.com",
+  "resume": "#",
+  "socials": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/RomainNicolaon",
+      "command": "git remote -v"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/romain-nicolaon/",
+      "command": "curl linkedin"
+    }
+  ]
+}
