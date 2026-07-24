@@ -1,18 +1,35 @@
 [
-    {
-        "category": "Langages",
-        "items": ["PHP", "JavaScript", "TypeScript", "SQL", "Bash", "HTML", "CSS"]
-    },
-    {
-        "category": "Frameworks & Librairies",
-        "items": ["Symfony", "Laravel", "Vue.js", "React", "Tailwind CSS", "Node.js"]
-    },
-    {
-        "category": "Bases de données",
-        "items": ["PostgreSQL", "MySQL", "Redis", "MongoDB"]
-    },
-    {
-        "category": "Outils & DevOps",
-        "items": ["Docker", "Git", "GitLab CI", "Linux", "Nginx", "Composer"]
-    }
+  {
+    "category": "Langages",
+    "items": [
+      "PHP",
+      "JavaScript",
+      "TypeScript",
+      "SQL",
+      "Bash",
+      "HTML",
+      "CSS",
+      "Python",
+      "C#"
+    ]
+  },
+  {
+    "category": "Frameworks & Librairies",
+    "items": [
+      "Symfony",
+      "Laravel",
+      "Vue.js",
+      "React",
+      "Tailwind CSS",
+      "Node.js"
+    ]
+  },
+  {
+    "category": "Bases de données",
+    "items": ["PostgreSQL", "MySQL", "Redis", "MongoDB"]
+  },
+  {
+    "category": "Outils & DevOps",
+    "items": ["Docker", "Git", "GitLab CI", "Linux", "Nginx", "Composer"]
+  }
 ]

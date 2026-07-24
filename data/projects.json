@@ -1,46 +1,46 @@
 [
-    {
-        "name": "terminal-portfolio",
-        "description": "Portfolio personnel au style terminal, en PHP vanilla avec données JSON et Tailwind CSS.",
-        "year": "2026",
-        "status": "actif",
-        "tags": ["PHP", "Tailwind", "JavaScript"],
-        "links": {
-            "demo": "#",
-            "source": "https://github.com/"
-        }
-    },
-    {
-        "name": "task-runner-cli",
-        "description": "Outil en ligne de commande pour automatiser les tâches de développement récurrentes.",
-        "year": "2025",
-        "status": "actif",
-        "tags": ["PHP", "CLI", "Symfony Console"],
-        "links": {
-            "demo": null,
-            "source": "https://github.com/"
-        }
-    },
-    {
-        "name": "api-weather-proxy",
-        "description": "Micro-service de mise en cache et d'agrégation de données météo depuis plusieurs sources.",
-        "year": "2024",
-        "status": "archivé",
-        "tags": ["PHP", "Redis", "API REST"],
-        "links": {
-            "demo": "#",
-            "source": "https://github.com/"
-        }
-    },
-    {
-        "name": "dotfiles",
-        "description": "Ma configuration Linux : zsh, tmux, neovim et scripts d'installation automatisés.",
-        "year": "2023",
-        "status": "actif",
-        "tags": ["Shell", "Linux", "Automation"],
-        "links": {
-            "demo": null,
-            "source": "https://github.com/"
-        }
+  {
+    "name": "terminal-portfolio",
+    "description": "Portfolio personnel au style terminal, en PHP vanilla avec données JSON et Tailwind CSS.",
+    "year": "2026",
+    "status": "actif",
+    "tags": ["PHP", "Tailwind", "JavaScript"],
+    "links": {
+      "demo": "#",
+      "source": "https://github.com/"
     }
+  },
+  {
+    "name": "discord-bots",
+    "description": "(x2) Bots discord privés pour la gestion de serveurs, mini jeux et l'automatisation de tâches, un développé en Python et l'autre en TypeScript.",
+    "year": "2020-2026",
+    "status": "actif",
+    "tags": ["Python", "TypeScript", "Discord.js"],
+    "links": {
+      "demo": null,
+      "source": "https://github.com/"
+    }
+  },
+  {
+    "name": "inleed-cms",
+    "description": "CMS interne pour la gestion de contenu des sites web des clients de l'entreprise Inleed, séparé en 3 parties : back-end api en Express, tableau de bord et sites clients en React, et base de données MongoDB.",
+    "year": "2023-2026",
+    "status": "archivé",
+    "tags": ["Express", "React", "MongoDB"],
+    "links": {
+      "demo": "http://tableau-de-bord.in-leed.com/",
+      "source": "https://github.com/"
+    }
+  },
+  {
+    "name": "dotfiles",
+    "description": "Ma configuration Linux : zsh, tmux, neovim et scripts d'installation automatisés.",
+    "year": "2023",
+    "status": "actif",
+    "tags": ["Shell", "Linux", "Automation"],
+    "links": {
+      "demo": null,
+      "source": "https://github.com/"
+    }
+  }
 ]
