@@ -14,7 +14,7 @@
             </p>
 
             <h1 class="mt-3 text-4xl font-extrabold text-term-bright text-glow sm:text-6xl">
-                <?= e($profile['name'] ?? 'Portfolio') ?>
+                Portfolio <?= e($profile['name'] ?? 'Romain NICOLAON') ?>
             </h1>
 
             <p class="mt-3 text-lg text-term-muted sm:text-2xl">
