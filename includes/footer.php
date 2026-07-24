@@ -7,7 +7,6 @@
                 <p class="text-xs">
                     Construit avec <span class="text-term-green">PHP</span> ·
                     <span class="text-term-green">Tailwind</span> ·
-                    <span class="text-term-green">JSON</span>
                 </p>
             </div>
             <p class="mt-4 text-xs text-term-border">
@@ -18,5 +17,6 @@
     </footer>
 
     <script src="assets/js/terminal.js"></script>
-</body>
-</html>
+    </body>
+
+    </html>

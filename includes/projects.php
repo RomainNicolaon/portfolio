@@ -1,4 +1,6 @@
-<?php /** @var array $projects */ $projects = $projects ?? []; ?>
+<?php
+
+/** @var array $projects */ $projects = $projects ?? []; ?>
 <section id="projects" class="border-t border-term-border py-20">
     <div class="mx-auto max-w-5xl px-4">
         <header class="reveal mb-10">
@@ -34,11 +36,16 @@
                     <div class="mt-4 flex items-center gap-4 border-t border-term-border pt-4 text-sm">
                         <span class="text-xs text-term-dim"><?= e($project['year'] ?? '') ?></span>
                         <span class="flex-1"></span>
-                        <?php if (!empty($project['links']['source'])): ?>
-                            <a href="<?= e($project['links']['source']) ?>" class="text-term-muted transition-colors hover:text-term-bright" target="_blank" rel="noopener">git clone</a>
-                        <?php endif; ?>
-                        <?php if (!empty($project['links']['demo'])): ?>
-                            <a href="<?= e($project['links']['demo']) ?>" class="text-term-green transition-colors hover:text-term-bright" target="_blank" rel="noopener">./demo</a>
+                        <?php $isPrivate = ($project['status'] ?? '') === 'privé'; ?>
+                        <?php if ($isPrivate): ?>
+                            <span class="text-xs text-term-dim">🔒 privé</span>
+                        <?php else: ?>
+                            <?php if (!empty($project['links']['source'])): ?>
+                                <a href="<?= e($project['links']['source']) ?>" class="text-term-muted transition-colors hover:text-term-bright" target="_blank" rel="noopener">git clone</a>
+                            <?php endif; ?>
+                            <?php if (!empty($project['links']['demo'])): ?>
+                                <a href="<?= e($project['links']['demo']) ?>" class="text-term-green transition-colors hover:text-term-bright" target="_blank" rel="noopener">./demo</a>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </article>
