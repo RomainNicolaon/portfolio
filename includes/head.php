@@ -45,7 +45,8 @@ foreach (($experiences ?? []) as $exp) {
             '@type'  => 'Organization',
             'name'   => $exp['company'],
             'url'    => $exp['url'] ?? null,
-        ]);
+            'sameAs' => !empty($exp['url']) ? [$exp['url']] : null,
+        ], static fn($v) => $v !== null && $v !== []);
         break;
     }
 }
@@ -77,6 +78,17 @@ foreach (($faq ?? []) as $item) {
 }
 
 // Graphe de données structurées Schema.org
+$organization = array_filter([
+    '@type'  => 'Organization',
+    '@id'    => $seoBase . '/#organization',
+    'name'   => $seoName,
+    'url'    => $seoBase . '/',
+    'logo'   => $seoImage,
+    'image'  => $seoImage,
+    'founder' => ['@id' => $seoBase . '/#person'],
+    'sameAs' => $sameAs ?: null,
+], static fn($v) => $v !== null && $v !== []);
+
 $person = array_filter([
     '@type'       => 'Person',
     '@id'         => $seoBase . '/#person',
@@ -103,8 +115,9 @@ $structuredData = [
             'name'            => $seoTitle,
             'description'     => $seoDescription,
             'inLanguage'      => 'fr-FR',
-            'publisher'       => ['@id' => $seoBase . '/#person'],
+            'publisher'       => ['@id' => $seoBase . '/#organization'],
         ],
+        $organization,
         [
             '@type'           => 'ProfilePage',
             '@id'             => $seoUrl . '#profilepage',
