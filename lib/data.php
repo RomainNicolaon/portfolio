@@ -39,3 +39,39 @@ function e(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+/**
+ * Retourne l'URL de base du site (sans slash final).
+ *
+ * Utilise la clé "website" du profil si elle est renseignée, sinon la
+ * déduit dynamiquement des variables serveur (schéma + hôte).
+ *
+ * @param array $profile Données du profil.
+ */
+function site_url(array $profile = []): string
+{
+    $website = trim((string)($profile['website'] ?? ''));
+    if ($website !== '') {
+        return rtrim($website, '/');
+    }
+
+    $https  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+        || (($_SERVER['SERVER_PORT'] ?? '') === '443');
+    $scheme = $https ? 'https' : 'http';
+    $host   = $_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? 'localhost');
+
+    return $scheme . '://' . $host;
+}
+
+/**
+ * Retourne l'URL absolue de la page courante (sans query string).
+ *
+ * @param array $profile Données du profil.
+ */
+function current_url(array $profile = []): string
+{
+    $path = strtok($_SERVER['REQUEST_URI'] ?? '/', '?') ?: '/';
+
+    return site_url($profile) . $path;
+}

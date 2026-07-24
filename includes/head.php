@@ -1,10 +1,147 @@
+<?php
+// Données injectées par index.php (valeurs par défaut si inclus seul)
+$profile     = $profile     ?? [];
+$skills      = $skills      ?? [];
+$education   = $education    ?? [];
+$experiences = $experiences ?? [];
+
+// --- Préparation des métadonnées SEO ---
+$seoName        = $profile['name'] ?? 'Portfolio';
+$seoTitle       = trim($seoName . ($profile['title'] ?? '' ? ' — ' . $profile['title'] : ''));
+$seoDescription = $profile['about'][0] ?? ($profile['taglines'][0] ?? 'Portfolio');
+$seoUrl         = current_url($profile);
+$seoBase        = site_url($profile);
+$seoImage       = $seoBase . '/assets/og-image.png';
+$seoLocale      = 'fr_FR';
+
+// Réseaux sociaux -> sameAs
+$sameAs = array_values(array_filter(array_map(
+    static fn($s) => $s['url'] ?? null,
+    $profile['socials'] ?? []
+)));
+
+// Compétences -> knowsAbout
+$knowsAbout = [];
+foreach (($skills ?? []) as $group) {
+    foreach (($group['items'] ?? []) as $item) {
+        $knowsAbout[] = $item;
+    }
+}
+
+// Formations -> alumniOf
+$alumniOf = [];
+foreach (($education ?? []) as $edu) {
+    if (!empty($edu['school'])) {
+        $alumniOf[] = ['@type' => 'EducationalOrganization', 'name' => $edu['school']];
+    }
+}
+
+// Expérience actuelle -> worksFor
+$worksFor = null;
+foreach (($experiences ?? []) as $exp) {
+    if (!empty($exp['company'])) {
+        $worksFor = array_filter([
+            '@type'  => 'Organization',
+            'name'   => $exp['company'],
+            'url'    => $exp['url'] ?? null,
+        ]);
+        break;
+    }
+}
+
+// Localisation -> address
+$address = null;
+if (!empty($profile['location'])) {
+    $parts   = array_map('trim', explode(',', $profile['location']));
+    $address = array_filter([
+        '@type'           => 'PostalAddress',
+        'addressLocality' => $parts[0] ?? null,
+        'addressCountry'  => $parts[1] ?? null,
+    ]);
+}
+
+// Graphe de données structurées Schema.org
+$person = array_filter([
+    '@type'       => 'Person',
+    '@id'         => $seoBase . '/#person',
+    'name'        => $seoName,
+    'url'         => $seoBase . '/',
+    'jobTitle'    => $profile['title'] ?? null,
+    'description' => $profile['about'][0] ?? null,
+    'email'       => !empty($profile['email']) ? 'mailto:' . $profile['email'] : null,
+    'image'       => $seoImage,
+    'address'     => $address ?: null,
+    'worksFor'    => $worksFor ?: null,
+    'alumniOf'    => $alumniOf ?: null,
+    'knowsAbout'  => $knowsAbout ?: null,
+    'sameAs'      => $sameAs ?: null,
+], static fn($v) => $v !== null && $v !== []);
+
+$structuredData = [
+    '@context' => 'https://schema.org',
+    '@graph'   => [
+        [
+            '@type'           => 'WebSite',
+            '@id'             => $seoBase . '/#website',
+            'url'             => $seoBase . '/',
+            'name'            => $seoTitle,
+            'description'     => $seoDescription,
+            'inLanguage'      => 'fr-FR',
+            'publisher'       => ['@id' => $seoBase . '/#person'],
+        ],
+        [
+            '@type'           => 'ProfilePage',
+            '@id'             => $seoUrl . '#profilepage',
+            'url'             => $seoUrl,
+            'name'            => $seoTitle,
+            'description'     => $seoDescription,
+            'inLanguage'      => 'fr-FR',
+            'isPartOf'        => ['@id' => $seoBase . '/#website'],
+            'mainEntity'      => ['@id' => $seoBase . '/#person'],
+        ],
+        $person,
+    ],
+];
+
+$jsonLd = json_encode(
+    $structuredData,
+    JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+);
+?>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($profile['name'] ?? 'Portfolio') ?> — <?= e($profile['title'] ?? '') ?></title>
-    <meta name="description" content="<?= e($profile['about'][0] ?? 'Portfolio') ?>">
+    <title><?= e($seoTitle) ?></title>
+    <meta name="description" content="<?= e($seoDescription) ?>">
+    <meta name="author" content="<?= e($seoName) ?>">
+    <meta name="keywords" content="<?= e(implode(', ', array_slice($knowsAbout, 0, 15))) ?>">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="theme-color" content="#0a0e0a">
+    <link rel="canonical" href="<?= e($seoUrl) ?>">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="<?= e($seoName) ?>">
+    <meta property="og:title" content="<?= e($seoTitle) ?>">
+    <meta property="og:description" content="<?= e($seoDescription) ?>">
+    <meta property="og:url" content="<?= e($seoUrl) ?>">
+    <meta property="og:image" content="<?= e($seoImage) ?>">
+    <meta property="og:locale" content="<?= e($seoLocale) ?>">
+    <meta property="profile:first_name" content="<?= e(explode(' ', $seoName)[0] ?? '') ?>">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= e($seoTitle) ?>">
+    <meta name="twitter:description" content="<?= e($seoDescription) ?>">
+    <meta name="twitter:image" content="<?= e($seoImage) ?>">
+
+    <!-- Données structurées Schema.org -->
+    <script type="application/ld+json">
+<?= $jsonLd ?>
+
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
