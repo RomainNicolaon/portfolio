@@ -37,9 +37,7 @@
                         <span class="text-xs text-term-dim"><?= e($project['year'] ?? '') ?></span>
                         <span class="flex-1"></span>
                         <?php $isPrivate = ($project['status'] ?? '') === 'privé'; ?>
-                        <?php if ($isPrivate): ?>
-                            <span class="text-xs text-term-dim">🔒 privé</span>
-                        <?php else: ?>
+                        <?php if (!$isPrivate): ?>
                             <?php if (!empty($project['links']['source'])): ?>
                                 <a href="<?= e($project['links']['source']) ?>" class="text-term-muted transition-colors hover:text-term-bright" target="_blank" rel="noopener">git clone</a>
                             <?php endif; ?>
