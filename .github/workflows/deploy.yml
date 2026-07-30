@@ -1,4 +1,4 @@
-name: Publish to Hostinger
+name: Publish to O2Switch
 
 on:
   push:
