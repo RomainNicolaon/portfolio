@@ -7,7 +7,13 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "^7.6.0",
@@ -18,8 +24,15 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.16.0",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@types/nodemailer": "^8.0.1",
-    "@types/three": "^0.185.3"
+    "@types/three": "^0.185.3",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.10",
+    "vue-tsc": "^3.3.9"
   }
 }

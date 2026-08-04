@@ -1,11 +1,18 @@
 <script setup lang="ts">
-const { profile, experiences, projects, skills, education, faq } = usePortfolio()
 const matrix = useMatrix()
-
-useSiteSeo()
+const arcade = useArcade()
+const palette = useCommandPalette()
 
 function onKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') matrix.stop()
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    palette.toggle()
+    return
+  }
+  if (e.key === 'Escape') {
+    matrix.stop()
+    arcade.stop()
+  }
 }
 
 onMounted(() => window.addEventListener('keydown', onKeydown))
@@ -33,20 +40,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
           échap / clic pour sortir
         </p>
       </div>
+      <SnakeGame v-if="arcade.active.value === 'snake'" />
+      <CommandPalette />
     </ClientOnly>
 
     <TheNav />
 
-    <main>
-      <TheHero />
-      <SectionAbout v-if="profile.about.length" />
-      <SectionExperience v-if="experiences.length" />
-      <SectionProjects v-if="projects.length" />
-      <SectionSkills v-if="skills.length" />
-      <SectionEducation v-if="education.length" />
-      <SectionFaq v-if="faq.length" />
-      <SectionContact />
-    </main>
+    <NuxtPage />
 
     <TheFooter />
   </div>

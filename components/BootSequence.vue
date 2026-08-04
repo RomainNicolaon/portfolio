@@ -3,7 +3,7 @@ const { profile } = usePortfolio()
 
 const done = ref(false)
 const lines = ref<string[]>([])
-let timers: ReturnType<typeof setTimeout>[] = []
+const timers: ReturnType<typeof setTimeout>[] = []
 
 const boot = [
   `booting portfolio.os v3.0 …`,

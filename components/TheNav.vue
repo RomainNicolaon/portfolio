@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { profile } = usePortfolio()
 const { time } = useClock()
+const palette = useCommandPalette()
 
 const open = ref(false)
 
@@ -53,6 +54,18 @@ const links = [
             <template #fallback><span>--:--:--</span></template>
           </ClientOnly>
         </div>
+        <ClientOnly>
+          <button
+            type="button"
+            class="hidden items-center gap-1 rounded border border-term-border px-2 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
+            aria-label="Ouvrir la palette de commandes"
+            title="Palette de commandes (Ctrl+K)"
+            @click="palette.toggle()"
+          >
+            <span class="text-term-green">&gt;_</span>
+            <kbd class="font-mono">Ctrl K</kbd>
+          </button>
+        </ClientOnly>
         <ClientOnly>
           <SettingsMenu />
         </ClientOnly>

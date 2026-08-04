@@ -1,5 +1,7 @@
 # portfolio
 
+[![CI](https://github.com/RomainNicolaon/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/RomainNicolaon/portfolio/actions/workflows/ci.yml)
+
 Portfolio personnel au style terminal, développé avec **Nuxt 3**, **Vue 3**, **TypeScript** et **Tailwind CSS**. Rendu côté serveur (SSR, app Node) avec pages prérendues pour la perf et une route serveur `/api/contact` pour le formulaire de contact.
 
 ## Développement

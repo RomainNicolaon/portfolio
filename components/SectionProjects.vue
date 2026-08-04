@@ -94,6 +94,11 @@ function toggleTag(tag: string) {
           <div class="mt-4 flex items-center gap-4 border-t border-term-border pt-4 text-sm">
             <span class="text-xs text-term-dim">{{ project.year }}</span>
             <span class="flex-1" />
+            <NuxtLink
+              :to="`/projets/${slugify(project.name)}`"
+              class="text-term-muted transition-colors hover:text-term-bright"
+              >cat README</NuxtLink
+            >
             <template v-if="project.status !== 'privé'">
               <a
                 v-if="project.links.source"

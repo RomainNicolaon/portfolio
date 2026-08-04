@@ -3,7 +3,7 @@ const canvas = ref<HTMLCanvasElement | null>(null)
 let raf = 0
 let ctx: CanvasRenderingContext2D | null = null
 let drops: number[] = []
-let fontSize = 14
+const fontSize = 14
 let width = 0
 let height = 0
 

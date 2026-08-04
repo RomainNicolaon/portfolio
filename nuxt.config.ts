@@ -1,9 +1,19 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { projects } from './data/portfolio'
+
+const slugify = (input: string): string =>
+  input
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   devtools: { enabled: false },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/sitemap'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/sitemap', '@nuxt/eslint'],
 
   css: ['~/assets/css/main.css'],
 
@@ -20,6 +30,9 @@ export default defineNuxtConfig({
     contactFrom: process.env.CONTACT_FROM || 'no-reply@nicolaon.fr',
     public: {
       siteUrl: 'https://www.nicolaon.fr',
+      // Analytics Matomo, opt-in : renseigner NUXT_PUBLIC_MATOMO_URL / _SITE_ID pour activer.
+      matomoUrl: process.env.NUXT_PUBLIC_MATOMO_URL || 'https://matomo.nicolaon.fr',
+      matomoSiteId: process.env.NUXT_PUBLIC_MATOMO_SITE_ID || '2',
     },
   },
 
@@ -29,7 +42,7 @@ export default defineNuxtConfig({
     // App Node (O2Switch) : pages prérendues pour la perf + /api dynamique.
     prerender: {
       crawlLinks: true,
-      routes: ['/'],
+      routes: ['/', ...projects.map((p) => `/projets/${slugify(p.name)}`)],
     },
   },
 
@@ -57,6 +70,12 @@ export default defineNuxtConfig({
         {
           rel: 'stylesheet',
           href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap',
+        },
+        {
+          rel: 'alternate',
+          type: 'application/rss+xml',
+          title: 'Romain NICOLAON — Projets',
+          href: '/rss.xml',
         },
       ],
       script: [

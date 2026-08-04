@@ -1,0 +1,40 @@
+name: Lighthouse
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Start server
+        run: node .output/server/index.mjs &
+        env:
+          PORT: 3000
+
+      - name: Wait for server
+        run: npx --yes wait-on http://localhost:3000 -t 30000
+
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/projets/terminal-portfolio
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: ./lighthouserc.json

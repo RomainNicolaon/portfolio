@@ -7,8 +7,6 @@ interface ContactBody {
   website?: string // honeypot anti-spam
 }
 
-const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 export default defineEventHandler(async (event) => {
   // Anti-spam : 5 envois max / 10 min par IP.
   const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
@@ -22,29 +20,17 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody<ContactBody>(event)
-
-  const name = (body?.name ?? '').trim()
-  const email = (body?.email ?? '').trim()
-  const message = (body?.message ?? '').trim()
-  const website = (body?.website ?? '').trim()
+  const valid = validateContact(body)
 
   // Un bot a rempli le champ caché → on fait semblant d'accepter.
-  if (website !== '') {
+  if (valid.honeypot) {
     return { ok: true }
   }
+  if (!valid.ok) {
+    throw createError({ statusCode: valid.code ?? 422, message: valid.message })
+  }
 
-  if (!name || !email || !message) {
-    throw createError({ statusCode: 422, message: 'Tous les champs sont requis.' })
-  }
-  if (name.length > 100 || email.length > 150 || message.length > 5000) {
-    throw createError({ statusCode: 422, message: 'Un des champs est trop long.' })
-  }
-  if (!emailRe.test(email)) {
-    throw createError({ statusCode: 422, message: 'Adresse e-mail invalide.' })
-  }
-  if (message.length < 10) {
-    throw createError({ statusCode: 422, message: 'Message trop court.' })
-  }
+  const { name, email, message } = valid.data!
 
   const config = useRuntimeConfig(event)
 

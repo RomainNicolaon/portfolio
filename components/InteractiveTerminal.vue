@@ -2,6 +2,7 @@
 const { profile, projects, skills, experiences, education } = usePortfolio()
 const { theme } = useSettings()
 const matrix = useMatrix()
+const arcade = useArcade()
 const sound = useSound()
 
 interface Line {
@@ -34,6 +35,9 @@ const COMMANDS = [
   'matrix',
   'neofetch',
   'cowsay',
+  'curl',
+  'weather',
+  'snake',
   'history',
   'man',
   'open',
@@ -73,8 +77,11 @@ function run(raw: string) {
         { text: '  resume      télécharger le CV' },
         { text: '  theme <x>   green | amber | blue' },
         { text: '  matrix      « wake up, Neo… »' },
+        { text: '  snake       petit jeu ASCII' },
         { text: '  neofetch    infos système (facon Linux)' },
         { text: '  cowsay <m>  une vache le dit pour vous' },
+        { text: '  curl <proj> détails d\'un projet' },
+        { text: '  weather     météo à Bourges' },
         { text: '  open <proj> ouvrir un projet (source/demo)' },
         { text: '  man <cmd>   manuel d\'une commande' },
         { text: '  history     historique des commandes' },
@@ -87,10 +94,26 @@ function run(raw: string) {
       push(profile.about.map((t) => ({ text: t })))
       break
     case 'whoami':
-      push([
-        { text: profile.name, cls: 'text-term-bright' },
-        { text: `${profile.title} · ${profile.location}` },
-      ])
+      if (args.includes('--json')) {
+        const data = {
+          name: profile.name,
+          handle: profile.handle,
+          title: profile.title,
+          location: profile.location,
+          email: profile.email,
+          website: profile.website,
+        }
+        push(
+          JSON.stringify(data, null, 2)
+            .split('\n')
+            .map((t) => ({ text: t, cls: 'text-term-green' })),
+        )
+      } else {
+        push([
+          { text: profile.name, cls: 'text-term-bright' },
+          { text: `${profile.title} · ${profile.location}` },
+        ])
+      }
       break
     case 'projects':
       push([
@@ -137,8 +160,13 @@ function run(raw: string) {
       if (arg === 'green' || arg === 'amber' || arg === 'blue') {
         theme.value = arg
         push([{ text: `thème → ${arg}`, cls: 'text-term-green' }])
+      } else if (arg === 'random') {
+        const others = (['green', 'amber', 'blue'] as const).filter((t) => t !== theme.value)
+        const pick = others[Math.floor(Math.random() * others.length)]
+        theme.value = pick
+        push([{ text: `thème aléatoire → ${pick}`, cls: 'text-term-green' }])
       } else {
-        push([{ text: 'usage: theme <green|amber|blue>', cls: 'text-term-dim' }])
+        push([{ text: 'usage: theme <green|amber|blue|random>', cls: 'text-term-dim' }])
       }
       break
     case 'matrix': {
@@ -251,6 +279,35 @@ function run(raw: string) {
       push([{ text: 'ouverture de la boîte d\'impression…', cls: 'text-term-green' }])
       setTimeout(() => window.print(), 150)
       break
+    case 'snake': {
+      arcade.start('snake')
+      push([{ text: 'lancement de snake.exe… (échap pour quitter)', cls: 'text-term-green' }])
+      break
+    }
+    case 'curl': {
+      const q = (args[0] || '').toLowerCase()
+      if (!q) {
+        push([{ text: 'usage: curl <projet>', cls: 'text-term-dim' }])
+        break
+      }
+      const proj = projects.find((p) => p.name.toLowerCase().includes(q))
+      if (!proj) {
+        push([{ text: `projet introuvable : ${q}`, cls: 'text-term-dim' }])
+        break
+      }
+      push([
+        { text: proj.name, cls: 'text-term-bright' },
+        { text: proj.description },
+        { text: `année   : ${proj.year} · statut : ${proj.status}` },
+        { text: `stack   : ${proj.tags.join(', ')}` },
+        { text: `demo    : ${proj.links.demo && proj.links.demo !== '#' ? proj.links.demo : '—'}`, cls: 'text-term-green' },
+        { text: `source  : ${proj.links.source || '—'}`, cls: 'text-term-green' },
+      ])
+      break
+    }
+    case 'weather':
+      void weather()
+      break
     case 'clear':
       output.value = []
       return
@@ -276,6 +333,57 @@ function run(raw: string) {
   sound.ok()
 }
 
+async function weather() {
+  push([{ text: 'récupération de la météo à Bourges…', cls: 'text-term-dim' }])
+  try {
+    const r = await $fetch<{
+      current: { temperature_2m: number; weather_code: number; wind_speed_10m: number }
+    }>('https://api.open-meteo.com/v1/forecast', {
+      params: {
+        latitude: 47.081,
+        longitude: 2.398,
+        current: 'temperature_2m,weather_code,wind_speed_10m',
+      },
+    })
+    const codes: Record<number, string> = {
+      0: 'ciel dégagé ☀️',
+      1: 'plutôt dégagé 🌤️',
+      2: 'partiellement nuageux ⛅',
+      3: 'couvert ☁️',
+      45: 'brouillard 🌫️',
+      48: 'brouillard givrant 🌫️',
+      51: 'bruine légère 🌧️',
+      61: 'pluie faible 🌧️',
+      63: 'pluie 🌧️',
+      65: 'forte pluie 🌧️',
+      71: 'neige ❄️',
+      80: 'averses 🌦️',
+      95: 'orage ⛈️',
+    }
+    const c = r.current
+    push([
+      { text: `Bourges, France`, cls: 'text-term-bright' },
+      { text: `${codes[c.weather_code] || 'conditions variables'}` },
+      { text: `température : ${Math.round(c.temperature_2m)}°C · vent : ${Math.round(c.wind_speed_10m)} km/h` },
+    ])
+  } catch {
+    push([{ text: 'météo indisponible pour le moment.', cls: 'text-term-dim' }])
+  }
+}
+
+// Suggestion « fantôme » (historique puis commandes), à la fish shell.
+const ghost = computed(() => {
+  const v = input.value
+  if (!v) return ''
+  for (let i = history.value.length - 1; i >= 0; i--) {
+    const h = history.value[i]
+    if (h.startsWith(v) && h !== v) return h.slice(v.length)
+  }
+  const lower = v.toLowerCase()
+  const c = COMMANDS.find((cmd) => cmd.startsWith(lower) && cmd !== lower)
+  return c ? c.slice(v.length) : ''
+})
+
 function submit() {
   const value = input.value
   if (value.trim()) {
@@ -297,6 +405,12 @@ function onKeydown(e: KeyboardEvent) {
     if (!history.value.length) return
     histIndex.value = Math.min(history.value.length, histIndex.value + 1)
     input.value = history.value[histIndex.value] ?? ''
+  } else if (e.key === 'ArrowRight') {
+    const el = e.target as HTMLInputElement
+    if (ghost.value && el.selectionStart === input.value.length) {
+      e.preventDefault()
+      input.value += ghost.value
+    }
   } else if (e.key === 'Tab') {
     e.preventDefault()
     const parts = input.value.trimStart().split(/\s+/)
@@ -340,18 +454,25 @@ function focusField() {
       </p>
       <div class="flex items-center gap-2">
         <span class="shrink-0 text-term-green">{{ prompt }}</span>
-        <input
-          ref="field"
-          v-model="input"
-          type="text"
-          class="term-input w-full flex-1 border-0 bg-transparent p-0 text-term-bright placeholder:text-term-dim focus:outline-none focus:ring-0"
-          autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
-          aria-label="Entrée de commande du terminal"
-          @keydown="onKeydown"
-          @keyup.enter="submit"
-        />
+        <div class="relative w-full flex-1">
+          <input
+            ref="field"
+            v-model="input"
+            type="text"
+            class="term-input relative z-10 w-full border-0 bg-transparent p-0 text-term-bright placeholder:text-term-dim focus:outline-none focus:ring-0"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-label="Entrée de commande du terminal"
+            @keydown="onKeydown"
+            @keyup.enter="submit"
+          />
+          <span
+            v-if="ghost"
+            class="pointer-events-none absolute inset-0 z-0 select-none whitespace-pre text-sm text-term-dim"
+            aria-hidden="true"
+          ><span class="invisible">{{ input }}</span>{{ ghost }}</span>
+        </div>
       </div>
     </div>
   </div>

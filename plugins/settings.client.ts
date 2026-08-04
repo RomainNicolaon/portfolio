@@ -1,6 +1,6 @@
 // Applique les réglages (thème, mouvement) au DOM et les persiste en localStorage.
 export default defineNuxtPlugin(() => {
-  const { theme, sound, motion } = useSettings()
+  const { theme, sound, motion, recruiter, ambient } = useSettings()
   const KEY = 'portfolio:settings'
 
   try {
@@ -10,6 +10,8 @@ export default defineNuxtPlugin(() => {
       if (s.theme === 'green' || s.theme === 'amber' || s.theme === 'blue') theme.value = s.theme
       if (typeof s.sound === 'boolean') sound.value = s.sound
       if (s.motion === 'auto' || s.motion === 'reduced') motion.value = s.motion
+      if (typeof s.recruiter === 'boolean') recruiter.value = s.recruiter
+      if (typeof s.ambient === 'boolean') ambient.value = s.ambient
     }
   } catch {
     /* localStorage indisponible */
@@ -19,16 +21,23 @@ export default defineNuxtPlugin(() => {
     const el = document.documentElement
     el.dataset.theme = theme.value
     el.classList.toggle('motion-off', motion.value === 'reduced')
+    el.classList.toggle('recruiter-mode', recruiter.value)
   }
 
   apply()
 
-  watch([theme, sound, motion], () => {
+  watch([theme, sound, motion, recruiter, ambient], () => {
     apply()
     try {
       localStorage.setItem(
         KEY,
-        JSON.stringify({ theme: theme.value, sound: sound.value, motion: motion.value }),
+        JSON.stringify({
+          theme: theme.value,
+          sound: sound.value,
+          motion: motion.value,
+          recruiter: recruiter.value,
+          ambient: ambient.value,
+        }),
       )
     } catch {
       /* localStorage indisponible */
