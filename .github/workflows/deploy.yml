@@ -26,6 +26,11 @@ jobs:
       - name: Build SSR app
         run: npm run build
 
+      # package.json des deps runtime (généré par Nitro) → racine de l'app,
+      # pour installer les deps via "npm install" côté O2Switch (pas d'upload de node_modules).
+      - name: Expose runtime package.json at app root
+        run: cp .output/server/package.json .output/package.json
+
       # Passenger (O2Switch) redémarre l'app quand tmp/restart.txt change.
       - name: Trigger app restart
         run: mkdir -p .output/tmp && date > .output/tmp/restart.txt
@@ -38,3 +43,7 @@ jobs:
           password: ${{ secrets.ftp_password }}
           local-dir: ./.output/
           server-dir: ${{ secrets.ftp_server_dir || './' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**

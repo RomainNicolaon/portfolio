@@ -40,12 +40,13 @@ La route `server/api/contact.post.ts` envoie les messages par SMTP via Nodemaile
 
 ## Déploiement (O2Switch — app Node)
 
-Le workflow `.github/workflows/deploy.yml` construit l'app (`npm run build`) et publie tout `.output/` par FTP à chaque push sur `main`, puis déclenche un redémarrage Passenger via `tmp/restart.txt`.
+Le workflow `.github/workflows/deploy.yml` construit l'app (`npm run build`), copie le `package.json` runtime généré par Nitro à la racine de l'app, puis publie `.output/` par FTP à chaque push sur `main` (**sans** `node_modules`), et déclenche un redémarrage Passenger via `tmp/restart.txt`.
 
 Côté O2Switch (cPanel → **Setup Node.js App**) :
 
 1. Créer l'app Node, **Application startup file** = `server/index.mjs` (si `.output/` est uploadé à la racine de l'app).
-2. Définir les variables d'environnement SMTP (voir `.env.example`).
-3. Secrets GitHub Actions : `ftp_server`, `ftp_username`, `ftp_password`, et `ftp_server_dir` (racine de l'app Node).
+2. Cliquer **Run NPM Install** : installe les deps runtime dans `node_modules/` à la racine de l'app (Node les résout depuis `server/…` via le dossier parent).
+3. Définir les variables d'environnement SMTP (voir `.env.example`).
+4. Secrets GitHub Actions : `ftp_server`, `ftp_username`, `ftp_password`, et `ftp_server_dir` (racine de l'app Node).
 
 > Le déploiement n'est plus un simple FTP de fichiers statiques mais une app Node : `npm run build` remplace `npm run generate`.
