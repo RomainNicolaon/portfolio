@@ -26,7 +26,7 @@ export const profile: Profile = {
     "En dehors de mes projets, je contribue à des projets d'amis et j'apprends l'univers des systèmes Linux et de l'automatisation.",
   ],
   email: 'nicolaon.romain@gmail.com',
-  resume: '#',
+  resume: '/docs/cv-romain.pdf',
   socials: [
     {
       label: 'GitHub',

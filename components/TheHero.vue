@@ -46,6 +46,15 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
             ls ./projects
           </a>
           <a
+            v-if="profile.resume && profile.resume !== '#'"
+            :href="profile.resume"
+            target="_blank"
+            rel="noopener"
+            class="rounded border border-term-border px-4 py-2 text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+          >
+            cat cv.pdf
+          </a>
+          <a
             href="#contact"
             class="rounded border border-term-border px-4 py-2 text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
           >
