@@ -65,10 +65,10 @@ function toggleTag(tag: string) {
 
       <div class="grid gap-5 sm:grid-cols-2">
         <article
-          v-for="(project, i) in filtered"
-          :key="project.name + i"
+          v-for="project in filtered"
+          :key="project.name"
           v-tilt
-          class="card-3d reveal group relative flex flex-col rounded-lg border border-term-border bg-term-panel p-5 transition-all hover:border-term-green hover:shadow-lg hover:shadow-term-green/10"
+          class="card-3d group relative flex flex-col rounded-lg border border-term-border bg-term-panel p-5 transition-all hover:border-term-green hover:shadow-lg hover:shadow-term-green/10"
         >
           <div class="flex items-start justify-between gap-3">
             <h3 class="flex items-center gap-2 text-lg font-bold text-term-bright">
