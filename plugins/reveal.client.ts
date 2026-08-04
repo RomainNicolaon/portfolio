@@ -1,26 +1,37 @@
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.hook('app:mounted', () => {
-    const reduceMotion = isReducedMotion()
-    const items = document.querySelectorAll('.reveal')
+  let observer: IntersectionObserver | null = null
+
+  const reveal = (el: Element) => el.classList.add('is-visible')
+
+  const scan = () => {
+    const items = document.querySelectorAll('.reveal:not(.is-visible)')
     if (!items.length) return
 
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      items.forEach((el) => el.classList.add('is-visible'))
+    if (isReducedMotion() || !('IntersectionObserver' in window)) {
+      items.forEach(reveal)
       return
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.15 },
-    )
+    if (!observer) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              reveal(entry.target)
+              observer?.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.15 },
+      )
+    }
 
-    items.forEach((el) => observer.observe(el))
+    items.forEach((el) => observer!.observe(el))
+  }
+
+  nuxtApp.hook('app:mounted', scan)
+  // Re-scan après chaque navigation client : sinon les nouveaux éléments .reveal restent masqués.
+  nuxtApp.hook('page:finish', () => {
+    requestAnimationFrame(scan)
   })
 })

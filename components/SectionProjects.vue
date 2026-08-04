@@ -70,6 +70,11 @@ function toggleTag(tag: string) {
           v-tilt
           class="card-3d group relative flex flex-col rounded-lg border border-term-border bg-term-panel p-5 transition-all hover:border-term-green hover:shadow-lg hover:shadow-term-green/10"
         >
+          <NuxtLink
+            :to="`/projets/${slugify(project.name)}`"
+            class="absolute inset-0 z-10 rounded-lg"
+            :aria-label="`Voir le détail du projet ${project.name}`"
+          />
           <div class="flex items-start justify-between gap-3">
             <h3 class="flex items-center gap-2 text-lg font-bold text-term-bright">
               <span class="text-term-green">&gt;_</span>
@@ -94,16 +99,16 @@ function toggleTag(tag: string) {
           <div class="mt-4 flex items-center gap-4 border-t border-term-border pt-4 text-sm">
             <span class="text-xs text-term-dim">{{ project.year }}</span>
             <span class="flex-1" />
-            <NuxtLink
-              :to="`/projets/${slugify(project.name)}`"
-              class="text-term-muted transition-colors hover:text-term-bright"
-              >cat README</NuxtLink
+            <span
+              class="font-medium text-term-green transition-colors group-hover:text-term-bright"
+              aria-hidden="true"
+              >détails du projet →</span
             >
             <template v-if="project.status !== 'privé'">
               <a
                 v-if="project.links.source"
                 :href="project.links.source"
-                class="text-term-muted transition-colors hover:text-term-bright"
+                class="relative z-20 text-term-muted transition-colors hover:text-term-bright"
                 target="_blank"
                 rel="noopener"
                 >git clone</a
@@ -111,7 +116,7 @@ function toggleTag(tag: string) {
               <a
                 v-if="project.links.demo"
                 :href="project.links.demo"
-                class="text-term-green transition-colors hover:text-term-bright"
+                class="relative z-20 text-term-green transition-colors hover:text-term-bright"
                 target="_blank"
                 rel="noopener"
                 >./demo</a
