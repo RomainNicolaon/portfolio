@@ -1,6 +1,6 @@
 # portfolio
 
-Portfolio personnel au style terminal, développé avec **Nuxt 3**, **Vue 3**, **TypeScript** et **Tailwind CSS**. Généré en site statique (SSG).
+Portfolio personnel au style terminal, développé avec **Nuxt 3**, **Vue 3**, **TypeScript** et **Tailwind CSS**. Rendu côté serveur (SSR, app Node) avec pages prérendues pour la perf et une route serveur `/api/contact` pour le formulaire de contact.
 
 ## Développement
 
@@ -11,17 +11,21 @@ npm run dev
 
 Le site est disponible sur http://localhost:3000.
 
-## Build statique
+## Build (SSR)
 
 ```bash
-npm run generate
+npm run build
 ```
 
-Le résultat est généré dans `.output/public/` et peut être déployé sur n'importe quel hébergement statique.
+Le résultat est généré dans `.output/` (`server/` + `public/`). L'output Nitro est autonome (les dépendances sont incluses).
 
 ```bash
-npx serve .output/public
+node .output/server/index.mjs
 ```
+
+### Formulaire de contact
+
+La route `server/api/contact.post.ts` envoie les messages par SMTP via Nodemailer. Variables d'environnement requises (voir `.env.example`) : `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`.
 
 ## Structure
 
@@ -31,8 +35,17 @@ npx serve .output/public
 - `data/portfolio.ts` — contenu (profil, expériences, projets, compétences, formation, FAQ)
 - `types/portfolio.ts` — types TypeScript
 - `assets/css/main.css` — styles complémentaires (scanlines, glow, reveal…)
-- `public/` — `robots.txt`, `sitemap.xml`, `llms.txt`
+- `public/` — `robots.txt`, `llms.txt`
+- `server/api/` — routes serveur (formulaire de contact)
 
-## Déploiement
+## Déploiement (O2Switch — app Node)
 
-Le workflow `.github/workflows/deploy.yml` build le site et publie `.output/public` par FTP à chaque push sur `main`.
+Le workflow `.github/workflows/deploy.yml` construit l'app (`npm run build`) et publie tout `.output/` par FTP à chaque push sur `main`, puis déclenche un redémarrage Passenger via `tmp/restart.txt`.
+
+Côté O2Switch (cPanel → **Setup Node.js App**) :
+
+1. Créer l'app Node, **Application startup file** = `server/index.mjs` (si `.output/` est uploadé à la racine de l'app).
+2. Définir les variables d'environnement SMTP (voir `.env.example`).
+3. Secrets GitHub Actions : `ftp_server`, `ftp_username`, `ftp_password`, et `ftp_server_dir` (racine de l'app Node).
+
+> Le déploiement n'est plus un simple FTP de fichiers statiques mais une app Node : `npm run build` remplace `npm run generate`.
