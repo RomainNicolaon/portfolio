@@ -29,6 +29,12 @@ node .output/server/index.mjs
 
 La route `server/api/contact.post.ts` envoie les messages par SMTP via Nodemailer. Variables d'environnement requises (voir `.env.example`) : `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `CONTACT_TO`, `CONTACT_FROM`.
 
+Protections anti-spam : honeypot + limite de débit par IP, et **Cloudflare Turnstile** (optionnel). Pour l'activer, renseigner `NUXT_PUBLIC_TURNSTILE_SITE_KEY` (clé publique) et `TURNSTILE_SECRET` (clé secrète). Sans ces variables, le widget ne s'affiche pas et la vérification est ignorée.
+
+### Images OG
+
+Une image de partage (1200×630 PNG) est générée par projet au build (`scripts/generate-og.mjs`, via `sharp`) dans `public/og/`. Le script tourne automatiquement avant `npm run build` (hook `prebuild`) ; aucune dépendance n'est ajoutée au runtime.
+
 ## Structure
 
 - `app.vue` — layout principal (page unique)

@@ -25,7 +25,9 @@ useSeoMeta({
   ogDescription: project.description,
   ogUrl: url,
   ogType: 'article',
+  ogImage: `${base}/og/${slug}.png`,
   twitterCard: 'summary_large_image',
+  twitterImage: `${base}/og/${slug}.png`,
 })
 
 useHead({

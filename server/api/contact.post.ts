@@ -5,6 +5,7 @@ interface ContactBody {
   email?: string
   message?: string
   website?: string // honeypot anti-spam
+  turnstileToken?: string // jeton Cloudflare Turnstile (si activé)
 }
 
 export default defineEventHandler(async (event) => {
@@ -33,6 +34,16 @@ export default defineEventHandler(async (event) => {
   const { name, email, message } = valid.data!
 
   const config = useRuntimeConfig(event)
+
+  // Anti-spam Turnstile (ignoré si aucun secret configuré).
+  const turnstileOk = await verifyTurnstile(
+    String(config.turnstileSecret || ''),
+    body.turnstileToken,
+    ip,
+  )
+  if (!turnstileOk) {
+    throw createError({ statusCode: 403, message: 'Vérification anti-spam échouée.' })
+  }
 
   // process.env d'abord (noms simples cPanel), runtimeConfig (NUXT_*) en repli.
   const smtpHost = process.env.SMTP_HOST || String(config.smtpHost || '')

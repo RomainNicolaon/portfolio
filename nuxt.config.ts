@@ -28,11 +28,15 @@ export default defineNuxtConfig({
     smtpPass: process.env.SMTP_PASS || '',
     contactTo: process.env.CONTACT_TO || 'nicolaon.romain@gmail.com',
     contactFrom: process.env.CONTACT_FROM || 'no-reply@nicolaon.fr',
+    // Anti-spam Cloudflare Turnstile (opt-in) : défini côté serveur uniquement.
+    turnstileSecret: process.env.TURNSTILE_SECRET || '',
     public: {
       siteUrl: 'https://www.nicolaon.fr',
       // Analytics Matomo, opt-in : renseigner NUXT_PUBLIC_MATOMO_URL / _SITE_ID pour activer.
       matomoUrl: process.env.NUXT_PUBLIC_MATOMO_URL || 'https://matomo.nicolaon.fr',
       matomoSiteId: process.env.NUXT_PUBLIC_MATOMO_SITE_ID || '2',
+      // Clé publique Turnstile : le widget ne s'affiche que si elle est renseignée.
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
     },
   },
 

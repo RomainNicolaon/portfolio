@@ -1,6 +1,23 @@
 <script setup lang="ts">
 const { profile } = usePortfolio()
 
+const turnstileSiteKey = String(useRuntimeConfig().public.turnstileSiteKey || '')
+const turnstileToken = ref('')
+
+if (import.meta.client && turnstileSiteKey) {
+  const w = window as unknown as {
+    onTurnstileVerify?: (t: string) => void
+    onTurnstileExpire?: () => void
+  }
+  w.onTurnstileVerify = (t: string) => (turnstileToken.value = t)
+  w.onTurnstileExpire = () => (turnstileToken.value = '')
+  useHead({
+    script: [
+      { src: 'https://challenges.cloudflare.com/turnstile/v0/api.js', async: true, defer: true },
+    ],
+  })
+}
+
 const form = reactive({ name: '', email: '', message: '', website: '' })
 const status = ref<'idle' | 'sending' | 'ok' | 'error'>('idle')
 const errorMsg = ref('')
@@ -24,6 +41,11 @@ async function submit() {
     errorMsg.value = 'Votre message est un peu court.'
     return
   }
+  if (turnstileSiteKey && !turnstileToken.value) {
+    status.value = 'error'
+    errorMsg.value = 'Merci de valider le test anti-robot.'
+    return
+  }
 
   status.value = 'sending'
   try {
@@ -34,10 +56,13 @@ async function submit() {
         email: form.email,
         message: form.message,
         website: form.website,
+        turnstileToken: turnstileToken.value,
       },
     })
     status.value = 'ok'
     form.name = form.email = form.message = ''
+    turnstileToken.value = ''
+    ;(window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset()
   } catch (e) {
     status.value = 'error'
     errorMsg.value =
@@ -45,6 +70,8 @@ async function submit() {
         ?.data?.message ||
       (e as { data?: { statusMessage?: string } })?.data?.statusMessage ||
       "Envoi impossible. Réessayez ou écrivez-moi directement par e-mail."
+    turnstileToken.value = ''
+    ;(window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset()
   }
 }
 </script>
@@ -114,6 +141,15 @@ async function submit() {
             <div class="absolute -left-[9999px]" aria-hidden="true">
               <label>Ne pas remplir<input v-model="form.website" type="text" tabindex="-1" autocomplete="off" /></label>
             </div>
+
+            <div
+              v-if="turnstileSiteKey"
+              class="cf-turnstile"
+              :data-sitekey="turnstileSiteKey"
+              data-theme="dark"
+              data-callback="onTurnstileVerify"
+              data-expired-callback="onTurnstileExpire"
+            />
 
             <div class="flex flex-wrap items-center gap-4">
               <button

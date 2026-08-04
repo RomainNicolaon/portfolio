@@ -4,6 +4,9 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "prebuild": "node scripts/generate-og.mjs",
+    "pregenerate": "node scripts/generate-og.mjs",
+    "og": "node scripts/generate-og.mjs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -30,7 +33,9 @@
     "@types/three": "^0.185.3",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
+    "jiti": "^2.7.0",
     "prettier": "^3.9.6",
+    "sharp": "^0.35.3",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10",
     "vue-tsc": "^3.3.9"
