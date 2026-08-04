@@ -27,7 +27,7 @@ async function submit() {
 
   status.value = 'sending'
   try {
-    await $fetch('/contact.php', {
+    await $fetch('/api/contact', {
       method: 'POST',
       body: {
         name: form.name,
@@ -41,7 +41,9 @@ async function submit() {
   } catch (e) {
     status.value = 'error'
     errorMsg.value =
-      (e as { data?: { error?: string } })?.data?.error ||
+      (e as { statusMessage?: string; data?: { statusMessage?: string; message?: string } })
+        ?.data?.statusMessage ||
+      (e as { statusMessage?: string })?.statusMessage ||
       "Envoi impossible. Réessayez ou écrivez-moi directement par e-mail."
   }
 }

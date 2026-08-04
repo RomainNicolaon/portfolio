@@ -12,6 +12,12 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    smtpHost: process.env.SMTP_HOST || '',
+    smtpPort: process.env.SMTP_PORT || '465',
+    smtpUser: process.env.SMTP_USER || '',
+    smtpPass: process.env.SMTP_PASS || '',
+    contactTo: process.env.CONTACT_TO || 'nicolaon.romain@gmail.com',
+    contactFrom: process.env.CONTACT_FROM || 'no-reply@nicolaon.fr',
     public: {
       siteUrl: 'https://www.nicolaon.fr',
     },
@@ -20,6 +26,7 @@ export default defineNuxtConfig({
   ssr: true,
 
   nitro: {
+    // App Node (O2Switch) : pages prérendues pour la perf + /api dynamique.
     prerender: {
       crawlLinks: true,
       routes: ['/'],
