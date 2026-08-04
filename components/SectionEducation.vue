@@ -9,7 +9,9 @@ const { education } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> cat education.txt
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// Formation</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// Formation" />
+        </h2>
       </header>
 
       <div class="grid gap-5 sm:grid-cols-2">

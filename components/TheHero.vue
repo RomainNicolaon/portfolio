@@ -5,7 +5,8 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 
 <template>
   <section id="hero" class="grid-bg relative overflow-hidden">
-    <div class="mx-auto flex min-h-[85vh] max-w-5xl flex-col justify-center px-4 py-20">
+    <MatrixRain />
+    <div class="relative z-10 mx-auto flex min-h-[85vh] max-w-5xl flex-col justify-center px-4 py-20">
       <div
         class="max-w-3xl rounded-lg border border-term-border bg-term-panel/60 p-6 shadow-2xl shadow-black/40 sm:p-8"
       >
@@ -23,7 +24,10 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 
         <p class="text-sm text-term-dim"><span class="text-term-green">$</span> whoami</p>
 
-        <h1 class="mt-3 text-4xl font-extrabold text-term-bright text-glow sm:text-6xl">
+        <h1
+          class="glitch mt-3 text-4xl font-extrabold text-term-bright text-glow sm:text-6xl"
+          :data-text="`Portfolio ${profile.name}`"
+        >
           Portfolio {{ profile.name }}
         </h1>
 

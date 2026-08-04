@@ -9,7 +9,9 @@ const { profile } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> ./contact.sh
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// Contact</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// Contact" />
+        </h2>
       </header>
 
       <div class="reveal rounded-lg border border-term-border bg-term-panel p-6 sm:p-8">

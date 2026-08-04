@@ -9,7 +9,9 @@ const { faq } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> cat faq.md
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// FAQ</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// FAQ" />
+        </h2>
       </header>
 
       <div class="space-y-3">

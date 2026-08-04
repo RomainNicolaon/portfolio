@@ -9,7 +9,9 @@ const { profile } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> cat about.txt
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// À propos</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// À propos" />
+        </h2>
       </header>
 
       <div class="reveal grid gap-8 md:grid-cols-3">

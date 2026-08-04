@@ -9,7 +9,9 @@ const { projects } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> ls -la ~/projects
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// Projets</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// Projets" />
+        </h2>
       </header>
 
       <div class="grid gap-5 sm:grid-cols-2">

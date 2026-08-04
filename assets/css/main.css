@@ -73,6 +73,41 @@ html {
   text-shadow: 0 0 4px rgba(34, 197, 94, 0.6), 0 0 12px rgba(34, 197, 94, 0.3);
 }
 
+/* Effet glitch sur le titre */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: inset(0 0 0 0);
+}
+.glitch::before {
+  left: 2px;
+  text-shadow: -2px 0 #00fff2;
+  animation: glitch-a 3.2s infinite steps(2, end);
+}
+.glitch::after {
+  left: -2px;
+  text-shadow: 2px 0 #ff003c;
+  animation: glitch-b 2.6s infinite steps(2, end);
+}
+@keyframes glitch-a {
+  0%, 92%, 100% { clip-path: inset(0 0 100% 0); }
+  93% { clip-path: inset(10% 0 60% 0); transform: translateX(-2px); }
+  95% { clip-path: inset(50% 0 20% 0); transform: translateX(2px); }
+  97% { clip-path: inset(30% 0 45% 0); transform: translateX(-1px); }
+}
+@keyframes glitch-b {
+  0%, 90%, 100% { clip-path: inset(100% 0 0 0); }
+  91% { clip-path: inset(60% 0 15% 0); transform: translateX(2px); }
+  94% { clip-path: inset(20% 0 55% 0); transform: translateX(-2px); }
+  96% { clip-path: inset(45% 0 30% 0); transform: translateX(1px); }
+}
+
 /* Fond en scanlines pour l'ambiance CRT */
 .scanlines {
   pointer-events: none;
@@ -128,5 +163,9 @@ html {
   .cursor,
   .type-cursor::after {
     animation: none;
+  }
+  .glitch::before,
+  .glitch::after {
+    display: none;
   }
 }

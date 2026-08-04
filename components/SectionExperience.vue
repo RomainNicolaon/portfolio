@@ -9,7 +9,9 @@ const { experiences } = usePortfolio()
         <p class="text-sm text-term-dim">
           <span class="text-term-green">$</span> cat experiences.json
         </p>
-        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">// Expériences</h2>
+        <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
+          <ScrambleText text="// Expériences" />
+        </h2>
       </header>
 
       <div class="relative space-y-6 border-l border-term-border pl-6 sm:pl-8">
