@@ -1,7 +1,4 @@
 export default defineNuxtPlugin((nuxtApp) => {
-  if (import.meta.server) return
-
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const MAX = 8
 
   interface TiltHandlers {
@@ -11,8 +8,9 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   nuxtApp.vueApp.directive('tilt', {
+    // mounted ne s'exécute que côté client, l'accès au DOM est donc sûr
     mounted(el: HTMLElement & { __tilt?: TiltHandlers }) {
-      if (reduce) return
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
       const move = (e: PointerEvent) => {
         const r = el.getBoundingClientRect()
