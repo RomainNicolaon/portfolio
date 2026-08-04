@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { profile } = usePortfolio()
+const { t } = useI18n()
 
 const turnstileSiteKey = String(useRuntimeConfig().public.turnstileSiteKey || '')
 const turnstileToken = ref('')
@@ -28,22 +29,22 @@ async function submit() {
   errorMsg.value = ''
   if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
     status.value = 'error'
-    errorMsg.value = 'Merci de remplir tous les champs.'
+    errorMsg.value = t('contact.errFill')
     return
   }
   if (!emailRe.test(form.email)) {
     status.value = 'error'
-    errorMsg.value = 'Adresse e-mail invalide.'
+    errorMsg.value = t('contact.errEmail')
     return
   }
   if (form.message.trim().length < 10) {
     status.value = 'error'
-    errorMsg.value = 'Votre message est un peu court.'
+    errorMsg.value = t('contact.errShort')
     return
   }
   if (turnstileSiteKey && !turnstileToken.value) {
     status.value = 'error'
-    errorMsg.value = 'Merci de valider le test anti-robot.'
+    errorMsg.value = t('contact.errTurnstile')
     return
   }
 
@@ -69,7 +70,7 @@ async function submit() {
       (e as { statusMessage?: string; data?: { statusMessage?: string; message?: string } })
         ?.data?.message ||
       (e as { data?: { statusMessage?: string } })?.data?.statusMessage ||
-      "Envoi impossible. Réessayez ou écrivez-moi directement par e-mail."
+      t('contact.errGeneric')
     turnstileToken.value = ''
     ;(window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset()
   }
@@ -84,7 +85,7 @@ async function submit() {
           <span class="text-term-green">$</span> ./contact.sh
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// Contact" />
+          <ScrambleText :text="t('sections.contact')" />
         </h2>
       </header>
 
@@ -92,12 +93,14 @@ async function submit() {
         <div class="rounded-lg border border-term-border bg-term-panel p-6 sm:p-8">
           <p class="mb-6 text-term-muted">
             <span class="text-term-green">&gt;</span>
-            Une idée de projet, une opportunité, ou juste envie d'échanger ? Écrivez-moi.
+            {{ t('contact.intro') }}
           </p>
 
           <form class="space-y-4" novalidate @submit.prevent="submit">
             <div>
-              <label for="c-name" class="mb-1 block text-xs text-term-dim">// nom</label>
+              <label for="c-name" class="mb-1 block text-xs text-term-dim">{{
+                t('contact.name')
+              }}</label>
               <input
                 id="c-name"
                 v-model="form.name"
@@ -106,12 +109,14 @@ async function submit() {
                 maxlength="100"
                 autocomplete="name"
                 class="term-input w-full rounded border border-term-border bg-term-bg/60 px-3 py-2 text-sm text-term-bright placeholder:text-term-dim focus:border-term-green focus:outline-none"
-                placeholder="Ada Lovelace"
+                :placeholder="t('contact.namePlaceholder')"
               />
             </div>
 
             <div>
-              <label for="c-email" class="mb-1 block text-xs text-term-dim">// e-mail</label>
+              <label for="c-email" class="mb-1 block text-xs text-term-dim">{{
+                t('contact.email')
+              }}</label>
               <input
                 id="c-email"
                 v-model="form.email"
@@ -125,7 +130,9 @@ async function submit() {
             </div>
 
             <div>
-              <label for="c-message" class="mb-1 block text-xs text-term-dim">// message</label>
+              <label for="c-message" class="mb-1 block text-xs text-term-dim">{{
+                t('contact.message')
+              }}</label>
               <textarea
                 id="c-message"
                 v-model="form.message"
@@ -133,7 +140,7 @@ async function submit() {
                 rows="5"
                 maxlength="5000"
                 class="term-input w-full resize-y rounded border border-term-border bg-term-bg/60 px-3 py-2 text-sm text-term-bright placeholder:text-term-dim focus:border-term-green focus:outline-none"
-                placeholder="Bonjour Romain, ..."
+                :placeholder="t('contact.messagePlaceholder')"
               />
             </div>
 
@@ -146,6 +153,7 @@ async function submit() {
               v-if="turnstileSiteKey"
               class="cf-turnstile"
               :data-sitekey="turnstileSiteKey"
+              data-action="turnstile-spin-v2"
               data-theme="dark"
               data-callback="onTurnstileVerify"
               data-expired-callback="onTurnstileExpire"
@@ -157,11 +165,11 @@ async function submit() {
                 :disabled="status === 'sending'"
                 class="rounded border border-term-green bg-term-green/10 px-4 py-2 text-sm text-term-bright transition-colors hover:bg-term-green hover:text-term-bg disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {{ status === 'sending' ? 'envoi…' : './send --message' }}
+                {{ status === 'sending' ? t('contact.sending') : t('contact.send') }}
               </button>
 
               <p v-if="status === 'ok'" class="text-sm text-term-green" role="status">
-                ✓ Message envoyé, merci !
+                {{ t('contact.ok') }}
               </p>
               <p v-else-if="status === 'error'" class="text-sm text-red-400/90" role="alert">
                 {{ errorMsg }}
@@ -171,7 +179,7 @@ async function submit() {
         </div>
 
         <div class="flex flex-col rounded-lg border border-term-border bg-term-panel p-6 sm:p-8">
-          <p class="text-xs text-term-dim">// direct</p>
+          <p class="text-xs text-term-dim">{{ t('contact.direct') }}</p>
           <a
             v-if="profile.email"
             :href="`mailto:${profile.email}`"
@@ -181,7 +189,7 @@ async function submit() {
           </a>
 
           <div v-if="profile.socials.length" class="mt-8 border-t border-term-border pt-6">
-            <p class="mb-4 text-xs text-term-dim">// liens</p>
+            <p class="mb-4 text-xs text-term-dim">{{ t('contact.links') }}</p>
             <ul class="space-y-3">
               <li v-for="(social, i) in profile.socials" :key="i">
                 <a

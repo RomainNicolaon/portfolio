@@ -1,25 +1,27 @@
 <script setup lang="ts">
 const route = useRoute()
-const { profile } = usePortfolio()
+const { profile, projects } = usePortfolio()
+const { t } = useI18n()
 
 definePageMeta({ key: (route) => route.fullPath })
 
 const slug = String(route.params.slug)
-const project = getProjectBySlug(slug)
+const project = projects.find((p) => slugify(p.name) === slug)
 
 if (!project) {
   throw createError({ statusCode: 404, statusMessage: 'Projet introuvable', fatal: true })
 }
 
 const config = useRuntimeConfig()
+const localePath = useLocalePath()
 const base = (profile.website || config.public.siteUrl).replace(/\/$/, '')
-const url = `${base}/projets/${slug}`
+const url = `${base}${localePath(`/projets/${slug}`)}`
 
 const hasSource = !!project.links.source && project.status !== 'privé'
 const hasDemo = !!project.links.demo && project.links.demo !== '#' && project.status !== 'privé'
 
 useSeoMeta({
-  title: `${project.name} — Projet de ${profile.name}`,
+  title: t('projectPage.metaTitle', { name: project.name, author: profile.name }),
   description: project.description,
   ogTitle: project.name,
   ogDescription: project.description,
@@ -31,7 +33,6 @@ useSeoMeta({
 })
 
 useHead({
-  link: [{ rel: 'canonical', href: url }],
   script: [
     {
       type: 'application/ld+json',
@@ -54,9 +55,11 @@ useHead({
 <template>
   <main class="mx-auto max-w-3xl px-4 py-16 sm:py-24">
     <nav class="reveal mb-8 text-sm text-term-dim">
-      <NuxtLink to="/" class="transition-colors hover:text-term-bright">~</NuxtLink>
+      <NuxtLink :to="localePath('/')" class="transition-colors hover:text-term-bright">~</NuxtLink>
       <span class="px-1">/</span>
-      <NuxtLink to="/#projects" class="transition-colors hover:text-term-bright">projects</NuxtLink>
+      <NuxtLink :to="localePath('/') + '#projects'" class="transition-colors hover:text-term-bright">{{
+        t('projectPage.breadcrumbProjects')
+      }}</NuxtLink>
       <span class="px-1">/</span>
       <span class="text-term-muted">{{ slug }}</span>
     </nav>
@@ -73,10 +76,10 @@ useHead({
           class="rounded border border-term-border px-2 py-0.5 text-xs"
           :class="project!.status === 'actif' ? 'text-term-green' : 'text-term-dim'"
         >
-          {{ project!.status }}
+          {{ t(`status.${project!.status}`) }}
         </span>
       </div>
-      <p class="mt-2 text-sm text-term-dim">année {{ project!.year }}</p>
+      <p class="mt-2 text-sm text-term-dim">{{ t('projectPage.year', { year: project!.year }) }}</p>
     </header>
 
     <p class="text-term-muted">{{ project!.description }}</p>
@@ -97,7 +100,7 @@ useHead({
         target="_blank"
         rel="noopener"
         class="rounded border border-term-border px-3 py-1.5 text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
-        >git clone ↗</a
+        >{{ t('projectPage.gitClone') }}</a
       >
       <a
         v-if="hasDemo"
@@ -105,14 +108,14 @@ useHead({
         target="_blank"
         rel="noopener"
         class="rounded border border-term-green px-3 py-1.5 text-term-bright transition-colors hover:bg-term-green hover:text-term-bg"
-        >./demo ↗</a
+        >{{ t('projectPage.demo') }}</a
       >
-      <span v-if="!hasSource && !hasDemo" class="text-term-dim">Projet privé — pas de lien public.</span>
+      <span v-if="!hasSource && !hasDemo" class="text-term-dim">{{ t('projectPage.private') }}</span>
     </div>
 
     <div class="mt-12">
-      <NuxtLink to="/#projects" class="text-sm text-term-dim transition-colors hover:text-term-bright"
-        >← retour aux projets</NuxtLink
+      <NuxtLink :to="localePath('/') + '#projects'" class="text-sm text-term-dim transition-colors hover:text-term-bright"
+        >{{ t('projectPage.back') }}</NuxtLink
       >
     </div>
   </main>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { faq } = usePortfolio()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -10,7 +11,7 @@ const { faq } = usePortfolio()
           <span class="text-term-green">$</span> cat faq.md
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// FAQ" />
+          <ScrambleText :text="t('sections.faq')" />
         </h2>
       </header>
 

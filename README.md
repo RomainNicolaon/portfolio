@@ -40,11 +40,26 @@ Une image de partage (1200×630 PNG) est générée par projet au build (`script
 - `app.vue` — layout principal (page unique)
 - `components/` — sections (nav, hero, about, experience, projects, skills, education, faq, contact, footer)
 - `composables/` — données du portfolio, horloge, SEO / JSON-LD
-- `data/portfolio.ts` — contenu (profil, expériences, projets, compétences, formation, FAQ)
+- `data/portfolio.ts` — contenu FR (profil, expériences, projets, compétences, formation, FAQ)
+- `data/portfolio.en.ts` — contenu EN (mêmes projets/slugs, descriptions traduites)
+- `i18n/locales/` — catalogues d'interface `fr.json` / `en.json`
 - `types/portfolio.ts` — types TypeScript
 - `assets/css/main.css` — styles complémentaires (scanlines, glow, reveal…)
 - `public/` — `robots.txt`, `llms.txt`
 - `server/api/` — routes serveur (formulaire de contact)
+
+## Internationalisation (FR / EN)
+
+Le site est bilingue via `@nuxtjs/i18n` (stratégie `prefix_except_default`) :
+
+- **Français** = langue par défaut, servie à la racine (`/`, `/projets/<slug>`).
+- **Anglais** servi sous `/en` (`/en`, `/en/projets/<slug>`).
+- Pas de détection automatique du navigateur (URLs stables pour le SEO).
+- Le sélecteur `FR | EN` est dans la barre de navigation.
+- Textes d'interface : `i18n/locales/fr.json` et `en.json`.
+- Contenu (projets, à propos, FAQ…) : `data/portfolio.ts` (FR) et `data/portfolio.en.ts` (EN). Les slugs de projets et les statuts restent identiques dans les deux langues.
+- `hreflang`, `canonical`, `og:locale` et `inLanguage` (JSON-LD) sont générés par locale.
+- Les deux versions sont prérendues au build.
 
 ## Déploiement (O2Switch — app Node)
 

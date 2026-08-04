@@ -4,6 +4,7 @@ const { theme } = useSettings()
 const matrix = useMatrix()
 const arcade = useArcade()
 const sound = useSound()
+const { t, te } = useI18n()
 
 interface Line {
   text: string
@@ -14,9 +15,7 @@ const prompt = `${profile.handle}@${profile.host}:~$`
 const input = ref('')
 const history = ref<string[]>([])
 const histIndex = ref(-1)
-const output = ref<Line[]>([
-  { text: "Tape 'help' pour lister les commandes disponibles.", cls: 'text-term-dim' },
-])
+const output = ref<Line[]>([{ text: t('terminal.hint'), cls: 'text-term-dim' }])
 const scroller = ref<HTMLElement | null>(null)
 const field = ref<HTMLInputElement | null>(null)
 
@@ -64,30 +63,30 @@ function run(raw: string) {
   switch (name.toLowerCase()) {
     case 'help':
       push([
-        { text: 'Commandes disponibles :', cls: 'text-term-bright' },
-        { text: '  help        cette aide' },
-        { text: '  about       qui suis-je' },
-        { text: '  whoami      identité courte' },
-        { text: '  projects    liste des projets' },
-        { text: '  skills      compétences techniques' },
-        { text: '  experience  parcours professionnel' },
-        { text: '  education   formation' },
-        { text: '  contact     email de contact' },
-        { text: '  social      liens (GitHub, LinkedIn)' },
-        { text: '  resume      télécharger le CV' },
-        { text: '  theme <x>   green | amber | blue' },
-        { text: '  matrix      « wake up, Neo… »' },
-        { text: '  snake       petit jeu ASCII' },
-        { text: '  neofetch    infos système (facon Linux)' },
-        { text: '  cowsay <m>  une vache le dit pour vous' },
-        { text: '  curl <proj> détails d\'un projet' },
-        { text: '  weather     météo à Bourges' },
-        { text: '  open <proj> ouvrir un projet (source/demo)' },
-        { text: '  man <cmd>   manuel d\'une commande' },
-        { text: '  history     historique des commandes' },
-        { text: '  print       imprimer / exporter en PDF' },
-        { text: '  date        date et heure' },
-        { text: '  clear       vider le terminal' },
+        { text: t('terminal.helpHeader'), cls: 'text-term-bright' },
+        { text: `  help        ${t('terminal.help.help')}` },
+        { text: `  about       ${t('terminal.help.about')}` },
+        { text: `  whoami      ${t('terminal.help.whoami')}` },
+        { text: `  projects    ${t('terminal.help.projects')}` },
+        { text: `  skills      ${t('terminal.help.skills')}` },
+        { text: `  experience  ${t('terminal.help.experience')}` },
+        { text: `  education   ${t('terminal.help.education')}` },
+        { text: `  contact     ${t('terminal.help.contact')}` },
+        { text: `  social      ${t('terminal.help.social')}` },
+        { text: `  resume      ${t('terminal.help.resume')}` },
+        { text: `  theme <x>   ${t('terminal.help.theme')}` },
+        { text: `  matrix      ${t('terminal.help.matrix')}` },
+        { text: `  snake       ${t('terminal.help.snake')}` },
+        { text: `  neofetch    ${t('terminal.help.neofetch')}` },
+        { text: `  cowsay <m>  ${t('terminal.help.cowsay')}` },
+        { text: `  curl <proj> ${t('terminal.help.curl')}` },
+        { text: `  weather     ${t('terminal.help.weather')}` },
+        { text: `  open <proj> ${t('terminal.help.open')}` },
+        { text: `  man <cmd>   ${t('terminal.help.man')}` },
+        { text: `  history     ${t('terminal.help.history')}` },
+        { text: `  print       ${t('terminal.help.print')}` },
+        { text: `  date        ${t('terminal.help.date')}` },
+        { text: `  clear       ${t('terminal.help.clear')}` },
       ])
       break
     case 'about':
@@ -117,11 +116,11 @@ function run(raw: string) {
       break
     case 'projects':
       push([
-        { text: `${projects.length} projets :`, cls: 'text-term-bright' },
+        { text: t('terminal.projectsHeader', { count: projects.length }), cls: 'text-term-bright' },
         ...projects.map((p) => ({
           text: `  ${p.name} — ${p.tags.slice(0, 3).join(', ')} (${p.year})`,
         })),
-        { text: "→ voir la section ./projects pour les détails", cls: 'text-term-dim' },
+        { text: t('terminal.projectsSee'), cls: 'text-term-dim' },
       ])
       break
     case 'skills':
@@ -150,36 +149,36 @@ function run(raw: string) {
       break
     case 'resume':
       if (profile.resume && profile.resume !== '#') {
-        push([{ text: `Ouverture du CV… ${profile.resume}`, cls: 'text-term-green' }])
+        push([{ text: t('terminal.resumeOpening', { url: profile.resume }), cls: 'text-term-green' }])
         window.open(profile.resume, '_blank', 'noopener')
       } else {
-        push([{ text: 'CV indisponible.', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.resumeUnavailable'), cls: 'text-term-dim' }])
       }
       break
     case 'theme':
       if (arg === 'green' || arg === 'amber' || arg === 'blue') {
         theme.value = arg
-        push([{ text: `thème → ${arg}`, cls: 'text-term-green' }])
+        push([{ text: t('terminal.themeSet', { theme: arg }), cls: 'text-term-green' }])
       } else if (arg === 'random') {
         const others = (['green', 'amber', 'blue'] as const).filter((t) => t !== theme.value)
         const pick = others[Math.floor(Math.random() * others.length)]
         theme.value = pick
-        push([{ text: `thème aléatoire → ${pick}`, cls: 'text-term-green' }])
+        push([{ text: t('terminal.themeRandom', { theme: pick }), cls: 'text-term-green' }])
       } else {
-        push([{ text: 'usage: theme <green|amber|blue|random>', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.themeUsage'), cls: 'text-term-dim' }])
       }
       break
     case 'matrix': {
       const started = matrix.start(7000)
       push([
         started
-          ? { text: 'Wake up, Neo… (échap pour sortir)', cls: 'text-term-green' }
-          : { text: 'Indisponible en mode animations réduites.', cls: 'text-term-dim' },
+          ? { text: t('terminal.matrixStart'), cls: 'text-term-green' }
+          : { text: t('terminal.matrixReduced'), cls: 'text-term-dim' },
       ])
       break
     }
     case 'date':
-      push([{ text: new Date().toLocaleString('fr-FR') }])
+      push([{ text: new Date().toLocaleString(t('terminal.dateLocale')) }])
       break
     case 'neofetch': {
       const logo = [
@@ -211,7 +210,7 @@ function run(raw: string) {
       break
     }
     case 'cowsay': {
-      const msg = arg || 'meuh !'
+      const msg = arg || t('terminal.cowDefault')
       const top = ` ${'_'.repeat(msg.length + 2)}`
       const bottom = ` ${'-'.repeat(msg.length + 2)}`
       push([
@@ -228,7 +227,7 @@ function run(raw: string) {
     }
     case 'history':
       if (!history.value.length) {
-        push([{ text: 'aucune commande dans l\'historique', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.historyEmpty'), cls: 'text-term-dim' }])
       } else {
         push(history.value.map((h, i) => ({ text: `  ${String(i + 1).padStart(3, ' ')}  ${h}` })))
       }
@@ -236,72 +235,72 @@ function run(raw: string) {
     case 'man': {
       const target = (args[0] || '').toLowerCase()
       const manual: Record<string, string> = {
-        about: 'affiche une présentation détaillée.',
-        projects: 'liste les projets ; voir aussi « open <projet> ».',
-        skills: 'liste les compétences par catégorie.',
-        theme: 'change le thème : theme <green|amber|blue>.',
-        matrix: 'lance l\'effet Matrix (échap pour sortir).',
-        neofetch: 'affiche des infos système facon Linux.',
-        open: 'ouvre un projet : open <nom> (source ou démo).',
-        resume: 'ouvre le CV au format PDF.',
-        print: 'ouvre la boîte d\'impression (export PDF).',
+        about: t('terminal.man.about'),
+        projects: t('terminal.man.projects'),
+        skills: t('terminal.man.skills'),
+        theme: t('terminal.man.theme'),
+        matrix: t('terminal.man.matrix'),
+        neofetch: t('terminal.man.neofetch'),
+        open: t('terminal.man.open'),
+        resume: t('terminal.man.resume'),
+        print: t('terminal.man.print'),
       }
       if (!target) {
-        push([{ text: 'usage: man <commande>', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.manUsage'), cls: 'text-term-dim' }])
       } else if (manual[target]) {
         push([{ text: `${target} — ${manual[target]}` }])
       } else {
-        push([{ text: `pas de manuel pour « ${target} »`, cls: 'text-term-dim' }])
+        push([{ text: t('terminal.manNone', { name: target }), cls: 'text-term-dim' }])
       }
       break
     }
     case 'open': {
       const q = (args[0] || '').toLowerCase()
       if (!q) {
-        push([{ text: 'usage: open <projet>', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.openUsage'), cls: 'text-term-dim' }])
         break
       }
       const proj = projects.find((p) => p.name.toLowerCase().includes(q))
       if (!proj) {
-        push([{ text: `projet introuvable : ${q}`, cls: 'text-term-dim' }])
+        push([{ text: t('terminal.projNotFound', { query: q }), cls: 'text-term-dim' }])
         break
       }
       const url = proj.links.demo && proj.links.demo !== '#' ? proj.links.demo : proj.links.source
       if (url && url !== '#') {
-        push([{ text: `ouverture de ${proj.name}… ${url}`, cls: 'text-term-green' }])
+        push([{ text: t('terminal.opening', { name: proj.name, url }), cls: 'text-term-green' }])
         window.open(url, '_blank', 'noopener')
       } else {
-        push([{ text: `${proj.name} n'a pas de lien public.`, cls: 'text-term-dim' }])
+        push([{ text: t('terminal.noPublicLink', { name: proj.name }), cls: 'text-term-dim' }])
       }
       break
     }
     case 'print':
-      push([{ text: 'ouverture de la boîte d\'impression…', cls: 'text-term-green' }])
+      push([{ text: t('terminal.printOpening'), cls: 'text-term-green' }])
       setTimeout(() => window.print(), 150)
       break
     case 'snake': {
       arcade.start('snake')
-      push([{ text: 'lancement de snake.exe… (échap pour quitter)', cls: 'text-term-green' }])
+      push([{ text: t('terminal.snakeStart'), cls: 'text-term-green' }])
       break
     }
     case 'curl': {
       const q = (args[0] || '').toLowerCase()
       if (!q) {
-        push([{ text: 'usage: curl <projet>', cls: 'text-term-dim' }])
+        push([{ text: t('terminal.curlUsage'), cls: 'text-term-dim' }])
         break
       }
       const proj = projects.find((p) => p.name.toLowerCase().includes(q))
       if (!proj) {
-        push([{ text: `projet introuvable : ${q}`, cls: 'text-term-dim' }])
+        push([{ text: t('terminal.projNotFound', { query: q }), cls: 'text-term-dim' }])
         break
       }
       push([
         { text: proj.name, cls: 'text-term-bright' },
         { text: proj.description },
-        { text: `année   : ${proj.year} · statut : ${proj.status}` },
-        { text: `stack   : ${proj.tags.join(', ')}` },
-        { text: `demo    : ${proj.links.demo && proj.links.demo !== '#' ? proj.links.demo : '—'}`, cls: 'text-term-green' },
-        { text: `source  : ${proj.links.source || '—'}`, cls: 'text-term-green' },
+        { text: `${t('terminal.curlYear')}   : ${proj.year} · ${t('terminal.curlStatus')} : ${t(`status.${proj.status}`)}` },
+        { text: `${t('terminal.curlStack')}   : ${proj.tags.join(', ')}` },
+        { text: `${t('terminal.curlDemo')}    : ${proj.links.demo && proj.links.demo !== '#' ? proj.links.demo : '—'}`, cls: 'text-term-green' },
+        { text: `${t('terminal.curlSource')}  : ${proj.links.source || '—'}`, cls: 'text-term-green' },
       ])
       break
     }
@@ -314,12 +313,12 @@ function run(raw: string) {
     case 'sudo':
       if (arg === 'hire-me') {
         push([
-          { text: '[sudo] mot de passe pour recruteur : ********', cls: 'text-term-dim' },
-          { text: 'Accès autorisé ✅', cls: 'text-term-green' },
-          { text: `Écrivez-moi : ${profile.email}`, cls: 'text-term-bright' },
+          { text: t('terminal.sudoPrompt'), cls: 'text-term-dim' },
+          { text: t('terminal.sudoGranted'), cls: 'text-term-green' },
+          { text: t('terminal.sudoWrite', { email: profile.email }), cls: 'text-term-bright' },
         ])
       } else {
-        push([{ text: `${profile.handle} n'est pas dans le fichier sudoers. Cet incident sera signalé.`, cls: 'text-term-dim' }])
+        push([{ text: t('terminal.sudoNotSudoers', { handle: profile.handle }), cls: 'text-term-dim' }])
       }
       break
     case 'ls':
@@ -327,14 +326,14 @@ function run(raw: string) {
       break
     default:
       sound.err()
-      push([{ text: `command not found: ${name} — tape 'help'`, cls: 'text-red-400/80' }])
+      push([{ text: t('terminal.notFound', { name }), cls: 'text-red-400/80' }])
       return
   }
   sound.ok()
 }
 
 async function weather() {
-  push([{ text: 'récupération de la météo à Bourges…', cls: 'text-term-dim' }])
+  push([{ text: t('terminal.weatherFetch'), cls: 'text-term-dim' }])
   try {
     const r = await $fetch<{
       current: { temperature_2m: number; weather_code: number; wind_speed_10m: number }
@@ -345,29 +344,23 @@ async function weather() {
         current: 'temperature_2m,weather_code,wind_speed_10m',
       },
     })
-    const codes: Record<number, string> = {
-      0: 'ciel dégagé ☀️',
-      1: 'plutôt dégagé 🌤️',
-      2: 'partiellement nuageux ⛅',
-      3: 'couvert ☁️',
-      45: 'brouillard 🌫️',
-      48: 'brouillard givrant 🌫️',
-      51: 'bruine légère 🌧️',
-      61: 'pluie faible 🌧️',
-      63: 'pluie 🌧️',
-      65: 'forte pluie 🌧️',
-      71: 'neige ❄️',
-      80: 'averses 🌦️',
-      95: 'orage ⛈️',
-    }
     const c = r.current
+    const code = String(c.weather_code)
+    const desc = te(`terminal.weatherCodes.${code}`)
+      ? t(`terminal.weatherCodes.${code}`)
+      : t('terminal.weatherVaries')
     push([
       { text: `Bourges, France`, cls: 'text-term-bright' },
-      { text: `${codes[c.weather_code] || 'conditions variables'}` },
-      { text: `température : ${Math.round(c.temperature_2m)}°C · vent : ${Math.round(c.wind_speed_10m)} km/h` },
+      { text: desc },
+      {
+        text: t('terminal.weatherTemp', {
+          temp: Math.round(c.temperature_2m),
+          wind: Math.round(c.wind_speed_10m),
+        }),
+      },
     ])
   } catch {
-    push([{ text: 'météo indisponible pour le moment.', cls: 'text-term-dim' }])
+    push([{ text: t('terminal.weatherUnavailable'), cls: 'text-term-dim' }])
   }
 }
 
@@ -440,8 +433,8 @@ function focusField() {
     @click="focusField"
   >
     <div class="flex items-center gap-2 border-b border-term-border px-3 py-1.5 text-xs text-term-dim">
-      <span class="text-term-green">&gt;_</span> console interactive
-      <span class="ml-auto hidden sm:inline">↑↓ historique · Tab complétion</span>
+      <span class="text-term-green">&gt;_</span> {{ t('terminal.console') }}
+      <span class="ml-auto hidden sm:inline">{{ t('terminal.hints') }}</span>
     </div>
     <div ref="scroller" class="max-h-56 overflow-y-auto px-3 py-2 text-sm leading-relaxed">
       <p
@@ -463,7 +456,7 @@ function focusField() {
             autocomplete="off"
             autocapitalize="off"
             spellcheck="false"
-            aria-label="Entrée de commande du terminal"
+            :aria-label="t('terminal.inputAria')"
             @keydown="onKeydown"
             @keyup.enter="submit"
           />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { experiences } = usePortfolio()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -10,7 +11,7 @@ const { experiences } = usePortfolio()
           <span class="text-term-green">$</span> cat experiences.json
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// Expériences" />
+          <ScrambleText :text="t('sections.experience')" />
         </h2>
       </header>
 
@@ -47,8 +48,8 @@ const { experiences } = usePortfolio()
 
           <div v-if="job.stack.length" class="mt-4 flex flex-wrap gap-2">
             <span
-              v-for="(tech, t) in job.stack"
-              :key="t"
+              v-for="(tech, ti) in job.stack"
+              :key="ti"
               class="rounded border border-term-border px-2 py-0.5 text-xs text-term-dim"
               >{{ tech }}</span
             >

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { skills } = usePortfolio()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -10,7 +11,7 @@ const { skills } = usePortfolio()
           <span class="text-term-green">$</span> cat skills.md
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// Compétences" />
+          <ScrambleText :text="t('sections.skills')" />
         </h2>
       </header>
 

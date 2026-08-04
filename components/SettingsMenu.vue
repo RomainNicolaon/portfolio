@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { theme, sound, motion, ambient } = useSettings()
 const { click } = useSound()
+const { t } = useI18n()
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
 
@@ -43,8 +44,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
       type="button"
       class="rounded border border-term-border px-2 py-1 text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
       :aria-expanded="open"
-      aria-label="Réglages d'affichage"
-      title="Réglages"
+      :aria-label="t('settings.aria')"
+      :title="t('settings.title')"
       @click.stop="toggleMenu"
     >
       ⚙ cfg
@@ -55,21 +56,21 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
       class="absolute right-0 z-50 mt-3 w-64 rounded-lg border border-term-border bg-term-panel p-5 text-xs shadow-2xl shadow-black/50"
     >
       <div class="mb-5">
-        <p class="mb-2.5 text-term-dim">// thème</p>
+        <p class="mb-2.5 text-term-dim">{{ t('settings.theme') }}</p>
         <div class="flex gap-2.5">
           <button
-            v-for="t in THEMES"
-            :key="t.id"
+            v-for="th in THEMES"
+            :key="th.id"
             type="button"
             class="flex-1 rounded border px-2 py-1.5 transition-colors"
             :class="
-              theme === t.id
+              theme === th.id
                 ? 'border-term-green text-term-bright'
                 : 'border-term-border text-term-muted hover:border-term-green'
             "
-            @click.stop="setTheme(t.id)"
+            @click.stop="setTheme(th.id)"
           >
-            {{ t.label }}
+            {{ th.label }}
           </button>
         </div>
       </div>
@@ -80,8 +81,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
           class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
           @click.stop="toggleSound"
         >
-          <span>son</span>
-          <span :class="sound ? 'text-term-green' : 'text-term-dim'">{{ sound ? 'on' : 'off' }}</span>
+          <span>{{ t('settings.sound') }}</span>
+          <span :class="sound ? 'text-term-green' : 'text-term-dim'">{{ sound ? t('settings.on') : t('settings.off') }}</span>
         </button>
 
         <button
@@ -89,9 +90,9 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
           class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
           @click.stop="toggleMotion"
         >
-          <span>animations</span>
+          <span>{{ t('settings.animations') }}</span>
           <span :class="motion === 'reduced' ? 'text-term-dim' : 'text-term-green'">
-            {{ motion === 'reduced' ? 'réduites' : 'on' }}
+            {{ motion === 'reduced' ? t('settings.reduced') : t('settings.on') }}
           </span>
         </button>
 
@@ -100,8 +101,8 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
           class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
           @click.stop="toggleAmbient"
         >
-          <span>ambiance CRT</span>
-          <span :class="ambient ? 'text-term-green' : 'text-term-dim'">{{ ambient ? 'on' : 'off' }}</span>
+          <span>{{ t('settings.ambient') }}</span>
+          <span :class="ambient ? 'text-term-green' : 'text-term-dim'">{{ ambient ? t('settings.on') : t('settings.off') }}</span>
         </button>
       </div>
     </div>

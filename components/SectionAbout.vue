@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { profile, projects, skills } = usePortfolio()
+const { t } = useI18n()
 
 const stats = computed(() => {
   const tags = new Set(projects.flatMap((p) => p.tags))
@@ -17,7 +18,7 @@ const stats = computed(() => {
           <span class="text-term-green">$</span> cat about.txt
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// À propos" />
+          <ScrambleText :text="t('sections.about')" />
         </h2>
       </header>
 
@@ -50,7 +51,7 @@ const stats = computed(() => {
             <div class="flex justify-between gap-4">
               <dt class="text-term-dim">status</dt>
               <dd :class="profile.available ? 'text-term-green' : 'text-term-muted'">
-                {{ profile.available ? 'ouvert aux opportunités' : 'indisponible' }}
+                {{ profile.available ? t('about.statusOpen') : t('about.statusClosed') }}
               </dd>
             </div>
           </dl>
@@ -64,9 +65,9 @@ const stats = computed(() => {
       </div>
 
       <div class="reveal mt-6 grid grid-cols-3 gap-3 sm:gap-6">
-        <AnimatedCounter :value="stats.yearsXp" suffix="+" label="années d'expérience" />
-        <AnimatedCounter :value="stats.projects" label="projets" />
-        <AnimatedCounter :value="stats.tech" suffix="+" label="technologies" />
+        <AnimatedCounter :value="stats.yearsXp" suffix="+" :label="t('about.years')" />
+        <AnimatedCounter :value="stats.projects" :label="t('about.projectsCount')" />
+        <AnimatedCounter :value="stats.tech" suffix="+" :label="t('about.tech')" />
       </div>
     </div>
   </section>

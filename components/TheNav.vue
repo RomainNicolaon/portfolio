@@ -2,6 +2,8 @@
 const { profile } = usePortfolio()
 const { time } = useClock()
 const palette = useCommandPalette()
+const { t, locale } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
 
 const open = ref(false)
 
@@ -58,14 +60,23 @@ const links = [
           <button
             type="button"
             class="hidden items-center gap-1 rounded border border-term-border px-2 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
-            aria-label="Ouvrir la palette de commandes"
-            title="Palette de commandes (Ctrl+K)"
+            :aria-label="t('nav.openPalette')"
+            :title="t('nav.paletteTitle')"
             @click="palette.toggle()"
           >
             <span class="text-term-green">&gt;_</span>
             <kbd class="font-mono">Ctrl K</kbd>
           </button>
         </ClientOnly>
+        <NuxtLink
+          :to="switchLocalePath(locale === 'en' ? 'fr' : 'en')"
+          class="flex items-center gap-1 rounded border border-term-border px-2 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+          :aria-label="locale === 'en' ? 'Passer en français' : 'Switch to English'"
+        >
+          <span :class="locale === 'fr' ? 'text-term-bright' : ''">FR</span>
+          <span class="text-term-dim">|</span>
+          <span :class="locale === 'en' ? 'text-term-bright' : ''">EN</span>
+        </NuxtLink>
         <ClientOnly>
           <SettingsMenu />
         </ClientOnly>
@@ -73,10 +84,10 @@ const links = [
           type="button"
           class="rounded border border-term-border px-2 py-1 text-term-muted transition-colors hover:border-term-green hover:text-term-bright lg:hidden"
           :aria-expanded="open"
-          aria-label="Menu de navigation"
+          :aria-label="t('nav.navAria')"
           @click="open = !open"
         >
-          {{ open ? '✕' : '≡' }} menu
+          {{ open ? '✕' : '≡' }} {{ t('nav.menu') }}
         </button>
       </div>
     </div>

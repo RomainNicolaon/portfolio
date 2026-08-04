@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { projects } = usePortfolio()
+const { t } = useI18n()
+const localePath = useLocalePath()
 
 const activeTag = ref<string | null>(null)
 
@@ -29,7 +31,7 @@ function toggleTag(tag: string) {
           <span class="text-term-green">$</span> ls -la ~/projects
         </p>
         <h2 class="mt-2 text-2xl font-bold text-term-bright sm:text-3xl">
-          <ScrambleText text="// Projets" />
+          <ScrambleText :text="t('sections.projects')" />
         </h2>
       </header>
 
@@ -71,9 +73,9 @@ function toggleTag(tag: string) {
           class="card-3d group relative flex flex-col rounded-lg border border-term-border bg-term-panel p-5 transition-all hover:border-term-green hover:shadow-lg hover:shadow-term-green/10"
         >
           <NuxtLink
-            :to="`/projets/${slugify(project.name)}`"
+            :to="localePath(`/projets/${slugify(project.name)}`)"
             class="absolute inset-0 z-10 rounded-lg"
-            :aria-label="`Voir le détail du projet ${project.name}`"
+            :aria-label="t('projects.detail')"
           />
           <div class="flex items-start justify-between gap-3">
             <h3 class="flex items-center gap-2 text-lg font-bold text-term-bright">
@@ -84,14 +86,14 @@ function toggleTag(tag: string) {
               class="whitespace-nowrap rounded border border-term-border px-2 py-0.5 text-xs"
               :class="project.status === 'actif' ? 'text-term-green' : 'text-term-dim'"
             >
-              {{ project.status }}
+              {{ t(`status.${project.status}`) }}
             </span>
           </div>
 
           <p class="mt-3 flex-1 text-sm text-term-muted">{{ project.description }}</p>
 
           <div v-if="project.tags.length" class="mt-4 flex flex-wrap gap-2">
-            <span v-for="(tag, t) in project.tags" :key="t" class="text-xs text-term-dim"
+            <span v-for="(tag, ti) in project.tags" :key="ti" class="text-xs text-term-dim"
               >#{{ tag }}</span
             >
           </div>
@@ -102,7 +104,7 @@ function toggleTag(tag: string) {
             <span
               class="font-medium text-term-green transition-colors group-hover:text-term-bright"
               aria-hidden="true"
-              >détails du projet →</span
+              >{{ t('projects.detail') }}</span
             >
             <template v-if="project.status !== 'privé'">
               <a

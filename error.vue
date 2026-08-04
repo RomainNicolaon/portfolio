@@ -2,10 +2,11 @@
 import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
+const { t } = useI18n()
 
 const code = computed(() => props.error?.statusCode || 404)
 const message = computed(() =>
-  code.value === 404 ? 'command not found' : props.error?.message || 'erreur système',
+  code.value === 404 ? 'command not found' : props.error?.message || t('error.system'),
 )
 
 useHead({ title: `${code.value} — ${message.value}` })

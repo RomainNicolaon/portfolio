@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { profile } = usePortfolio()
+const { t } = useI18n()
 const year = new Date().getFullYear()
 </script>
 
@@ -11,7 +12,7 @@ const year = new Date().getFullYear()
           <span class="text-term-green">$</span> echo "&copy; {{ year }} {{ profile.name }}"
         </p>
         <p class="text-xs">
-          Construit avec <span class="text-term-green">Nuxt</span> ·
+          {{ t('footer.builtWith') }} <span class="text-term-green">Nuxt</span> ·
           <span class="text-term-green">Tailwind</span>
         </p>
       </div>

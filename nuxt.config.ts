@@ -13,9 +13,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   devtools: { enabled: false },
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/sitemap', '@nuxt/eslint'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/sitemap', '@nuxt/eslint', '@nuxtjs/i18n'],
 
   css: ['~/assets/css/main.css'],
+
+  i18n: {
+    strategy: 'prefix_except_default',
+    defaultLocale: 'fr',
+    detectBrowserLanguage: false,
+    baseUrl: 'https://www.nicolaon.fr',
+    bundle: { optimizeTranslationDirective: false },
+    compilation: { strictMessage: false, escapeHtml: false },
+    locales: [
+      { code: 'fr', language: 'fr-FR', name: 'Français', file: 'fr.json' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
+    ],
+  },
 
   site: {
     url: 'https://www.nicolaon.fr',
@@ -35,8 +48,8 @@ export default defineNuxtConfig({
       // Analytics Matomo, opt-in : renseigner NUXT_PUBLIC_MATOMO_URL / _SITE_ID pour activer.
       matomoUrl: process.env.NUXT_PUBLIC_MATOMO_URL || 'https://matomo.nicolaon.fr',
       matomoSiteId: process.env.NUXT_PUBLIC_MATOMO_SITE_ID || '2',
-      // Clé publique Turnstile : le widget ne s'affiche que si elle est renseignée.
-      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '',
+      // Clé publique Turnstile (widget déjà créé côté Cloudflare) ; surchargeable par env.
+      turnstileSiteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAEGQsBaxPINy2x5-',
     },
   },
 
@@ -46,7 +59,12 @@ export default defineNuxtConfig({
     // App Node (O2Switch) : pages prérendues pour la perf + /api dynamique.
     prerender: {
       crawlLinks: true,
-      routes: ['/', ...projects.map((p) => `/projets/${slugify(p.name)}`)],
+      routes: [
+        '/',
+        '/en',
+        ...projects.map((p) => `/projets/${slugify(p.name)}`),
+        ...projects.map((p) => `/en/projets/${slugify(p.name)}`),
+      ],
     },
   },
 

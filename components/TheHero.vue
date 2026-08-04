@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { profile } = usePortfolio()
+const { t } = useI18n()
 const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 </script>
 
@@ -71,7 +72,7 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
             class="flex items-center gap-2 text-xs text-term-green"
           >
             <span class="h-2 w-2 animate-pulse rounded-full bg-term-green" />
-            disponible
+            {{ t('hero.available') }}
           </span>
         </div>
 

@@ -2,6 +2,17 @@
 const matrix = useMatrix()
 const arcade = useArcade()
 const palette = useCommandPalette()
+const { t } = useI18n()
+
+const i18nHead = useLocaleHead({ dir: true, lang: true, seo: true })
+useHead(() => {
+  const h = i18nHead.value
+  return {
+    htmlAttrs: { lang: h.htmlAttrs?.lang },
+    link: h.link,
+    meta: h.meta,
+  }
+})
 
 function onKeydown(e: KeyboardEvent) {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -32,12 +43,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
         class="fixed inset-0 z-[46] cursor-pointer bg-term-bg/80"
         role="button"
         tabindex="0"
-        aria-label="Fermer l'effet Matrix"
+        :aria-label="t('matrix.close')"
         @click="matrix.stop()"
       >
         <MatrixRain />
         <p class="absolute bottom-6 left-1/2 -translate-x-1/2 text-xs text-term-dim">
-          échap / clic pour sortir
+          {{ t('matrix.hint') }}
         </p>
       </div>
       <SnakeGame v-if="arcade.active.value === 'snake'" />

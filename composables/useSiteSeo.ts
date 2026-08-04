@@ -1,13 +1,25 @@
-import { education, experiences, faq, profile, skills } from '~/data/portfolio'
+import * as fr from '~/data/portfolio'
+import * as en from '~/data/portfolio.en'
 
 export function useSiteSeo() {
   const config = useRuntimeConfig()
+  const { locale, locales } = useI18n()
+
+  const data = locale.value === 'en' ? en : fr
+  const { profile, education, experiences, faq, skills } = data
+
+  const localeMeta = (unref(locales) as { code: string; language?: string }[]).find(
+    (l) => l.code === locale.value,
+  )
+  const lang = localeMeta?.language || (locale.value === 'en' ? 'en-US' : 'fr-FR')
+
   const base = (profile.website || config.public.siteUrl).replace(/\/$/, '')
+  const homePath = locale.value === 'en' ? '/en' : '/'
 
   const seoName = profile.name
   const seoTitle = profile.title ? `${seoName} — ${profile.title}` : seoName
   const seoDescription = profile.about[0] || profile.taglines[0] || 'Portfolio'
-  const seoUrl = `${base}/`
+  const seoUrl = `${base}${homePath}`
   const seoImage = `${base}/og-image.png`
 
   const sameAs = profile.socials.map((s) => s.url).filter(Boolean)
@@ -51,7 +63,7 @@ export function useSiteSeo() {
       url: `${base}/`,
       name: seoTitle,
       description: seoDescription,
-      inLanguage: 'fr-FR',
+      inLanguage: lang,
       publisher: { '@id': `${base}/#organization` },
     },
     {
@@ -70,7 +82,7 @@ export function useSiteSeo() {
       url: seoUrl,
       name: seoTitle,
       description: seoDescription,
-      inLanguage: 'fr-FR',
+      inLanguage: lang,
       isPartOf: { '@id': `${base}/#website` },
       mainEntity: { '@id': `${base}/#person` },
     },
@@ -95,7 +107,7 @@ export function useSiteSeo() {
     graph.push({
       '@type': 'FAQPage',
       '@id': `${seoUrl}#faq`,
-      inLanguage: 'fr-FR',
+      inLanguage: lang,
       isPartOf: { '@id': `${base}/#website` },
       mainEntity: faqEntities,
     })
@@ -112,9 +124,7 @@ export function useSiteSeo() {
     ogSiteName: seoName,
     ogTitle: seoTitle,
     ogDescription: seoDescription,
-    ogUrl: seoUrl,
     ogImage: seoImage,
-    ogLocale: 'fr_FR',
     twitterCard: 'summary_large_image',
     twitterTitle: seoTitle,
     twitterDescription: seoDescription,
@@ -122,7 +132,6 @@ export function useSiteSeo() {
   })
 
   useHead({
-    link: [{ rel: 'canonical', href: seoUrl }],
     meta: [{ property: 'profile:first_name', content: seoName.split(' ')[0] || '' }],
     script: [
       {
