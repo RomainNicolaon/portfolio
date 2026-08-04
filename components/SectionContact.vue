@@ -42,8 +42,8 @@ async function submit() {
     status.value = 'error'
     errorMsg.value =
       (e as { statusMessage?: string; data?: { statusMessage?: string; message?: string } })
-        ?.data?.statusMessage ||
-      (e as { statusMessage?: string })?.statusMessage ||
+        ?.data?.message ||
+      (e as { data?: { statusMessage?: string } })?.data?.statusMessage ||
       "Envoi impossible. Réessayez ou écrivez-moi directement par e-mail."
   }
 }

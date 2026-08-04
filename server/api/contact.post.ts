@@ -10,6 +10,17 @@ interface ContactBody {
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default defineEventHandler(async (event) => {
+  // Anti-spam : 5 envois max / 10 min par IP.
+  const ip = getRequestIP(event, { xForwardedFor: true }) || 'unknown'
+  const limit = rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000)
+  if (!limit.ok) {
+    setResponseHeader(event, 'Retry-After', limit.retryAfter)
+    throw createError({
+      statusCode: 429,
+      message: 'Trop de tentatives. Réessayez dans quelques minutes.',
+    })
+  }
+
   const body = await readBody<ContactBody>(event)
 
   const name = (body?.name ?? '').trim()
@@ -23,16 +34,16 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!name || !email || !message) {
-    throw createError({ statusCode: 422, statusMessage: 'Tous les champs sont requis.' })
+    throw createError({ statusCode: 422, message: 'Tous les champs sont requis.' })
   }
   if (name.length > 100 || email.length > 150 || message.length > 5000) {
-    throw createError({ statusCode: 422, statusMessage: 'Un des champs est trop long.' })
+    throw createError({ statusCode: 422, message: 'Un des champs est trop long.' })
   }
   if (!emailRe.test(email)) {
-    throw createError({ statusCode: 422, statusMessage: 'Adresse e-mail invalide.' })
+    throw createError({ statusCode: 422, message: 'Adresse e-mail invalide.' })
   }
   if (message.length < 10) {
-    throw createError({ statusCode: 422, statusMessage: 'Message trop court.' })
+    throw createError({ statusCode: 422, message: 'Message trop court.' })
   }
 
   const config = useRuntimeConfig(event)
@@ -48,7 +59,7 @@ export default defineEventHandler(async (event) => {
   if (!smtpHost || !smtpUser || !smtpPass) {
     throw createError({
       statusCode: 500,
-      statusMessage: "Le service d'envoi n'est pas configuré.",
+      message: "Le service d'envoi n'est pas configuré.",
     })
   }
 
@@ -76,8 +87,24 @@ export default defineEventHandler(async (event) => {
   } catch {
     throw createError({
       statusCode: 502,
-      statusMessage: "L'envoi a échoué. Réessayez ou écrivez-moi directement par e-mail.",
+      message: "L'envoi a échoué. Réessayez ou écrivez-moi directement par e-mail.",
     })
+  }
+
+  // Accusé de réception au visiteur (non bloquant).
+  try {
+    await transporter.sendMail({
+      from: `Romain NICOLAON <${contactFrom}>`,
+      to: safeEmail,
+      subject: 'Votre message a bien été reçu',
+      text:
+        `Bonjour ${safeName},\n\n` +
+        `Merci pour votre message, je l'ai bien reçu et vous répondrai rapidement.\n\n` +
+        `Pour rappel, voici votre message :\n${message}\n\n` +
+        `— Romain NICOLAON\nhttps://www.nicolaon.fr`,
+    })
+  } catch {
+    // Échec de l'accusé de réception : sans conséquence pour l'utilisateur.
   }
 
   return { ok: true }

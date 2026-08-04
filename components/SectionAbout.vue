@@ -1,5 +1,12 @@
 <script setup lang="ts">
-const { profile } = usePortfolio()
+const { profile, projects, skills } = usePortfolio()
+
+const stats = computed(() => {
+  const tags = new Set(projects.flatMap((p) => p.tags))
+  const techCount = new Set([...tags, ...skills.flatMap((g) => g.items)]).size
+  const yearsXp = Math.max(1, new Date().getFullYear() - 2023)
+  return { yearsXp, projects: projects.length, tech: techCount }
+})
 </script>
 
 <template>
@@ -54,6 +61,12 @@ const { profile } = usePortfolio()
         <ClientOnly>
           <GithubStats />
         </ClientOnly>
+      </div>
+
+      <div class="reveal mt-6 grid grid-cols-3 gap-3 sm:gap-6">
+        <AnimatedCounter :value="stats.yearsXp" suffix="+" label="années d'expérience" />
+        <AnimatedCounter :value="stats.projects" label="projets" />
+        <AnimatedCounter :value="stats.tech" suffix="+" label="technologies" />
       </div>
     </div>
   </section>

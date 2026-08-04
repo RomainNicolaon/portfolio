@@ -324,3 +324,35 @@ html.motion-off .crt-flicker,
 html.motion-off .cursor-glow {
   display: none;
 }
+
+/* Impression / export PDF : masque le décor CRT et passe en noir sur blanc */
+@media print {
+  .scanlines,
+  .crt-vignette,
+  .crt-flicker,
+  .cursor-glow,
+  nav,
+  footer,
+  .term-input,
+  [aria-label='Console interactive'] {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  section {
+    border: none !important;
+    padding: 1rem 0 !important;
+    break-inside: avoid;
+  }
+  a {
+    color: #111 !important;
+    text-decoration: underline;
+  }
+}

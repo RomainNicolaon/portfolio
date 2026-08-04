@@ -32,6 +32,12 @@ const COMMANDS = [
   'resume',
   'theme',
   'matrix',
+  'neofetch',
+  'cowsay',
+  'history',
+  'man',
+  'open',
+  'print',
   'clear',
   'date',
 ]
@@ -67,6 +73,12 @@ function run(raw: string) {
         { text: '  resume      télécharger le CV' },
         { text: '  theme <x>   green | amber | blue' },
         { text: '  matrix      « wake up, Neo… »' },
+        { text: '  neofetch    infos système (facon Linux)' },
+        { text: '  cowsay <m>  une vache le dit pour vous' },
+        { text: '  open <proj> ouvrir un projet (source/demo)' },
+        { text: '  man <cmd>   manuel d\'une commande' },
+        { text: '  history     historique des commandes' },
+        { text: '  print       imprimer / exporter en PDF' },
         { text: '  date        date et heure' },
         { text: '  clear       vider le terminal' },
       ])
@@ -141,11 +153,117 @@ function run(raw: string) {
     case 'date':
       push([{ text: new Date().toLocaleString('fr-FR') }])
       break
+    case 'neofetch': {
+      const logo = [
+        '       _.-""-._      ',
+        '     .\'  ._.  \'.    ',
+        '    /   (o o)   \\   ',
+        '    |    \\_/    |   ',
+        '    \\  \'---\'  /   ',
+        '     \'._____.\'     ',
+      ]
+      const info = [
+        `${profile.handle}@${profile.host}`,
+        '-----------------',
+        `OS       : Arch Linux (btw)`,
+        `Shell    : zsh`,
+        `Editor   : neovim`,
+        `Theme    : ${theme.value}`,
+        `Stack    : Nuxt · Vue · TypeScript`,
+        `Location : ${profile.location}`,
+        `Uptime   : ${Math.round(performance.now() / 1000)}s`,
+      ]
+      const rows = Math.max(logo.length, info.length)
+      const lines: Line[] = []
+      for (let i = 0; i < rows; i++) {
+        const l = (logo[i] || '').padEnd(22, ' ')
+        lines.push({ text: `${l}${info[i] || ''}`, cls: 'text-term-green' })
+      }
+      push(lines)
+      break
+    }
+    case 'cowsay': {
+      const msg = arg || 'meuh !'
+      const top = ` ${'_'.repeat(msg.length + 2)}`
+      const bottom = ` ${'-'.repeat(msg.length + 2)}`
+      push([
+        { text: top },
+        { text: `< ${msg} >` },
+        { text: bottom },
+        { text: '        \\   ^__^' },
+        { text: '         \\  (oo)\\_______' },
+        { text: '            (__)\\       )\\/\\' },
+        { text: '                ||----w |' },
+        { text: '                ||     ||' },
+      ])
+      break
+    }
+    case 'history':
+      if (!history.value.length) {
+        push([{ text: 'aucune commande dans l\'historique', cls: 'text-term-dim' }])
+      } else {
+        push(history.value.map((h, i) => ({ text: `  ${String(i + 1).padStart(3, ' ')}  ${h}` })))
+      }
+      break
+    case 'man': {
+      const target = (args[0] || '').toLowerCase()
+      const manual: Record<string, string> = {
+        about: 'affiche une présentation détaillée.',
+        projects: 'liste les projets ; voir aussi « open <projet> ».',
+        skills: 'liste les compétences par catégorie.',
+        theme: 'change le thème : theme <green|amber|blue>.',
+        matrix: 'lance l\'effet Matrix (échap pour sortir).',
+        neofetch: 'affiche des infos système facon Linux.',
+        open: 'ouvre un projet : open <nom> (source ou démo).',
+        resume: 'ouvre le CV au format PDF.',
+        print: 'ouvre la boîte d\'impression (export PDF).',
+      }
+      if (!target) {
+        push([{ text: 'usage: man <commande>', cls: 'text-term-dim' }])
+      } else if (manual[target]) {
+        push([{ text: `${target} — ${manual[target]}` }])
+      } else {
+        push([{ text: `pas de manuel pour « ${target} »`, cls: 'text-term-dim' }])
+      }
+      break
+    }
+    case 'open': {
+      const q = (args[0] || '').toLowerCase()
+      if (!q) {
+        push([{ text: 'usage: open <projet>', cls: 'text-term-dim' }])
+        break
+      }
+      const proj = projects.find((p) => p.name.toLowerCase().includes(q))
+      if (!proj) {
+        push([{ text: `projet introuvable : ${q}`, cls: 'text-term-dim' }])
+        break
+      }
+      const url = proj.links.demo && proj.links.demo !== '#' ? proj.links.demo : proj.links.source
+      if (url && url !== '#') {
+        push([{ text: `ouverture de ${proj.name}… ${url}`, cls: 'text-term-green' }])
+        window.open(url, '_blank', 'noopener')
+      } else {
+        push([{ text: `${proj.name} n'a pas de lien public.`, cls: 'text-term-dim' }])
+      }
+      break
+    }
+    case 'print':
+      push([{ text: 'ouverture de la boîte d\'impression…', cls: 'text-term-green' }])
+      setTimeout(() => window.print(), 150)
+      break
     case 'clear':
       output.value = []
       return
     case 'sudo':
-      push([{ text: `${profile.handle} n'est pas dans le fichier sudoers. Cet incident sera signalé.`, cls: 'text-term-dim' }])
+      if (arg === 'hire-me') {
+        push([
+          { text: '[sudo] mot de passe pour recruteur : ********', cls: 'text-term-dim' },
+          { text: 'Accès autorisé ✅', cls: 'text-term-green' },
+          { text: `Écrivez-moi : ${profile.email}`, cls: 'text-term-bright' },
+        ])
+      } else {
+        push([{ text: `${profile.handle} n'est pas dans le fichier sudoers. Cet incident sera signalé.`, cls: 'text-term-dim' }])
+      }
       break
     case 'ls':
       push([{ text: 'about/  projects/  skills/  experience/  education/  contact/' }])
@@ -181,8 +299,17 @@ function onKeydown(e: KeyboardEvent) {
     input.value = history.value[histIndex.value] ?? ''
   } else if (e.key === 'Tab') {
     e.preventDefault()
-    const match = COMMANDS.find((c) => c.startsWith(input.value.trim().toLowerCase()))
-    if (match) input.value = match
+    const parts = input.value.trimStart().split(/\s+/)
+    if (parts.length <= 1) {
+      const match = COMMANDS.find((c) => c.startsWith(parts[0].toLowerCase()))
+      if (match) input.value = match
+    } else if (parts[0].toLowerCase() === 'open') {
+      const match = projects.find((p) => p.name.toLowerCase().startsWith(parts[1].toLowerCase()))
+      if (match) input.value = `open ${match.name}`
+    } else if (parts[0].toLowerCase() === 'theme') {
+      const match = ['green', 'amber', 'blue'].find((t) => t.startsWith(parts[1].toLowerCase()))
+      if (match) input.value = `theme ${match}`
+    }
   } else if (e.key.length === 1) {
     sound.key()
   }
