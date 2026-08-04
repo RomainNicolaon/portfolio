@@ -4,6 +4,11 @@ const { time } = useClock()
 const palette = useCommandPalette()
 const { t, locale } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
+const localePath = useLocalePath()
+
+// Anchors live on the home page, so prefix them with the localized home path
+// to keep the links working from project pages too.
+const home = computed(() => localePath('/'))
 
 const open = ref(false)
 
@@ -28,23 +33,23 @@ const links = [
           <span class="h-3 w-3 rounded-full bg-yellow-500/80" />
           <span class="h-3 w-3 rounded-full bg-term-green" />
         </span>
-        <a href="#hero" class="truncate text-term-bright">
+        <NuxtLink :to="home + '#hero'" class="truncate text-term-bright">
           <span class="text-term-dim">$</span> {{ profile.handle }}@{{ profile.host
           }}<span class="text-term-dim">:~</span>
-        </a>
+        </NuxtLink>
       </div>
 
       <ul class="hidden items-center gap-5 lg:flex">
         <li v-for="link in links" :key="link.href">
-          <a :href="link.href" class="text-term-muted transition-colors hover:text-term-bright">{{
+          <NuxtLink :to="home + link.href" class="text-term-muted transition-colors hover:text-term-bright">{{
             link.label
-          }}</a>
+          }}</NuxtLink>
         </li>
         <li>
-          <a
-            href="#contact"
+          <NuxtLink
+            :to="home + '#contact'"
             class="rounded border border-term-green px-3 py-1 text-term-bright transition-colors hover:bg-term-green hover:text-term-bg"
-            >./contact</a
+            >./contact</NuxtLink
           >
         </li>
       </ul>
@@ -59,7 +64,7 @@ const links = [
         <ClientOnly>
           <button
             type="button"
-            class="hidden items-center gap-1 rounded border border-term-border px-2 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
+            class="hidden h-7 items-center gap-1 rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
             :aria-label="t('nav.openPalette')"
             :title="t('nav.paletteTitle')"
             @click="palette.toggle()"
@@ -70,7 +75,7 @@ const links = [
         </ClientOnly>
         <NuxtLink
           :to="switchLocalePath(locale === 'en' ? 'fr' : 'en')"
-          class="flex items-center gap-1 rounded border border-term-border px-2 py-1 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+          class="flex h-7 items-center gap-1 rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
           :aria-label="locale === 'en' ? 'Passer en français' : 'Switch to English'"
         >
           <span :class="locale === 'fr' ? 'text-term-bright' : ''">FR</span>
@@ -82,7 +87,7 @@ const links = [
         </ClientOnly>
         <button
           type="button"
-          class="rounded border border-term-border px-2 py-1 text-term-muted transition-colors hover:border-term-green hover:text-term-bright lg:hidden"
+          class="inline-flex h-7 items-center rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright lg:hidden"
           :aria-expanded="open"
           :aria-label="t('nav.navAria')"
           @click="open = !open"
@@ -95,19 +100,19 @@ const links = [
     <div v-if="open" class="border-t border-term-border bg-term-panel lg:hidden">
       <ul class="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-3">
         <li v-for="link in links" :key="link.href">
-          <a
-            :href="link.href"
+          <NuxtLink
+            :to="home + link.href"
             class="block rounded px-2 py-2 text-term-muted transition-colors hover:bg-term-bg/60 hover:text-term-bright"
             @click="open = false"
-            >{{ link.label }}</a
+            >{{ link.label }}</NuxtLink
           >
         </li>
         <li>
-          <a
-            href="#contact"
+          <NuxtLink
+            :to="home + '#contact'"
             class="mt-1 block rounded border border-term-green px-2 py-2 text-center text-term-bright transition-colors hover:bg-term-green hover:text-term-bg"
             @click="open = false"
-            >./contact</a
+            >./contact</NuxtLink
           >
         </li>
       </ul>

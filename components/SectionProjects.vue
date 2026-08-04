@@ -75,8 +75,9 @@ function toggleTag(tag: string) {
           <NuxtLink
             :to="localePath(`/projets/${slugify(project.name)}`)"
             class="absolute inset-0 z-10 rounded-lg"
-            :aria-label="t('projects.detail')"
-          />
+          >
+            <span class="sr-only">{{ t('projects.detailFor', { name: project.name }) }}</span>
+          </NuxtLink>
           <div class="flex items-start justify-between gap-3">
             <h3 class="flex items-center gap-2 text-lg font-bold text-term-bright">
               <span class="text-term-green">&gt;_</span>

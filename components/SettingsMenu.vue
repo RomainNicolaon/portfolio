@@ -42,7 +42,7 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
   <div ref="root" class="relative">
     <button
       type="button"
-      class="rounded border border-term-border px-2 py-1 text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+      class="inline-flex h-7 items-center rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
       :aria-expanded="open"
       :aria-label="t('settings.aria')"
       :title="t('settings.title')"

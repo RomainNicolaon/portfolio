@@ -43,6 +43,7 @@
     "grep": "grep --tag",
     "all": "all",
     "detail": "project details →",
+    "detailFor": "View {name} project details",
     "gitClone": "git clone",
     "demo": "./demo"
   },
