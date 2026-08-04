@@ -1,5 +1,24 @@
 <script setup lang="ts">
 const { projects } = usePortfolio()
+
+const activeTag = ref<string | null>(null)
+
+const tags = computed(() => {
+  const counts = new Map<string, number>()
+  for (const p of projects) for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1)
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 12)
+    .map(([tag]) => tag)
+})
+
+const filtered = computed(() =>
+  activeTag.value ? projects.filter((p) => p.tags.includes(activeTag.value as string)) : projects,
+)
+
+function toggleTag(tag: string) {
+  activeTag.value = activeTag.value === tag ? null : tag
+}
 </script>
 
 <template>
@@ -14,10 +33,40 @@ const { projects } = usePortfolio()
         </h2>
       </header>
 
+      <div class="reveal mb-8 flex flex-wrap items-center gap-2 text-xs">
+        <span class="text-term-dim">grep --tag</span>
+        <button
+          type="button"
+          class="rounded border px-2 py-1 transition-colors"
+          :class="
+            activeTag === null
+              ? 'border-term-green text-term-bright'
+              : 'border-term-border text-term-muted hover:border-term-green'
+          "
+          @click="activeTag = null"
+        >
+          all
+        </button>
+        <button
+          v-for="tag in tags"
+          :key="tag"
+          type="button"
+          class="rounded border px-2 py-1 transition-colors"
+          :class="
+            activeTag === tag
+              ? 'border-term-green text-term-bright'
+              : 'border-term-border text-term-muted hover:border-term-green'
+          "
+          @click="toggleTag(tag)"
+        >
+          #{{ tag }}
+        </button>
+      </div>
+
       <div class="grid gap-5 sm:grid-cols-2">
         <article
-          v-for="(project, i) in projects"
-          :key="i"
+          v-for="(project, i) in filtered"
+          :key="project.name + i"
           v-tilt
           class="card-3d reveal group relative flex flex-col rounded-lg border border-term-border bg-term-panel p-5 transition-all hover:border-term-green hover:shadow-lg hover:shadow-term-green/10"
         >

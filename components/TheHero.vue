@@ -74,6 +74,10 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
             disponible
           </span>
         </div>
+
+        <ClientOnly>
+          <InteractiveTerminal />
+        </ClientOnly>
       </div>
     </div>
   </section>

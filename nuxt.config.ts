@@ -3,13 +3,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   devtools: { enabled: false },
 
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/sitemap'],
 
   css: ['~/assets/css/main.css'],
 
+  site: {
+    url: 'https://www.nicolaon.fr',
+  },
+
   runtimeConfig: {
     public: {
-      siteUrl: 'https://nicolaon.fr',
+      siteUrl: 'https://www.nicolaon.fr',
     },
   },
 

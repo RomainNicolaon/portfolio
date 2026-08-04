@@ -44,10 +44,15 @@ const links = [
         </li>
       </ul>
 
-      <div class="hidden items-center gap-2 text-xs text-term-dim sm:flex md:hidden lg:flex">
+      <div class="flex items-center gap-3">
+        <div class="hidden items-center gap-2 text-xs text-term-dim sm:flex md:hidden lg:flex">
+          <ClientOnly>
+            <span>{{ time }}</span>
+            <template #fallback><span>--:--:--</span></template>
+          </ClientOnly>
+        </div>
         <ClientOnly>
-          <span>{{ time }}</span>
-          <template #fallback><span>--:--:--</span></template>
+          <SettingsMenu />
         </ClientOnly>
       </div>
     </div>

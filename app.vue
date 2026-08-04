@@ -7,6 +7,12 @@ useSiteSeo()
 <template>
   <div>
     <div class="scanlines" aria-hidden="true" />
+    <div class="crt-vignette" aria-hidden="true" />
+    <div class="crt-flicker" aria-hidden="true" />
+    <ClientOnly>
+      <CursorGlow />
+      <BootSequence />
+    </ClientOnly>
 
     <TheNav />
 

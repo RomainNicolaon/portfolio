@@ -6,28 +6,67 @@
    Portfolio terminal — styles complémentaires à Tailwind
    ========================================================================== */
 
+/* Palette par défaut (thème « green »). Chaque variable est un triplet RVB
+   consommé par Tailwind via rgb(var(--c-x) / <alpha-value>). */
 :root {
-  --term-green: #22c55e;
-  --term-neon: #00ff41;
+  --c-bg: 10 14 10;
+  --c-panel: 15 21 15;
+  --c-border: 28 43 28;
+  --c-dim: 63 111 63;
+  --c-muted: 122 154 122;
+  --c-green: 34 197 94;
+  --c-bright: 74 222 128;
+  --c-neon: 0 255 65;
+
+  --term-bg: rgb(var(--c-bg));
+  --term-green: rgb(var(--c-green));
+  --term-neon: rgb(var(--c-neon));
+}
+
+[data-theme='amber'] {
+  --c-bg: 14 11 6;
+  --c-panel: 22 17 9;
+  --c-border: 48 36 16;
+  --c-dim: 122 88 34;
+  --c-muted: 176 148 106;
+  --c-green: 245 158 11;
+  --c-bright: 251 191 36;
+  --c-neon: 255 176 0;
+}
+
+[data-theme='blue'] {
+  --c-bg: 8 11 16;
+  --c-panel: 12 17 24;
+  --c-border: 24 36 52;
+  --c-dim: 60 92 124;
+  --c-muted: 130 152 176;
+  --c-green: 56 189 248;
+  --c-bright: 125 211 252;
+  --c-neon: 0 229 255;
 }
 
 @layer base {
   html {
-    background-color: #0a0e0a;
+    background-color: var(--term-bg);
   }
   body {
-    background-color: #0a0e0a;
-    color: #7a9a7a;
+    background-color: var(--term-bg);
+    color: rgb(var(--c-muted));
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
   }
   ::selection {
-    background-color: #22c55e;
-    color: #0a0e0a;
+    background-color: rgb(var(--c-green));
+    color: rgb(var(--c-bg));
+  }
+  :focus-visible {
+    outline: 2px solid var(--term-green);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
 html {
-  scrollbar-color: #22c55e #0a0e0a;
+  scrollbar-color: rgb(var(--c-green)) rgb(var(--c-bg));
 }
 
 /* Scrollbar (WebKit) */
@@ -36,15 +75,15 @@ html {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0e0a;
+  background: rgb(var(--c-bg));
 }
 ::-webkit-scrollbar-thumb {
-  background: #1c2b1c;
+  background: rgb(var(--c-border));
   border-radius: 0;
-  border: 2px solid #0a0e0a;
+  border: 2px solid rgb(var(--c-bg));
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #22c55e;
+  background: rgb(var(--c-green));
 }
 
 /* Curseur clignotant du terminal */
@@ -70,7 +109,7 @@ html {
 
 /* Effet de lueur (glow) sur le texte */
 .text-glow {
-  text-shadow: 0 0 4px rgba(34, 197, 94, 0.6), 0 0 12px rgba(34, 197, 94, 0.3);
+  text-shadow: 0 0 4px rgb(var(--c-green) / 0.6), 0 0 12px rgb(var(--c-green) / 0.3);
 }
 
 /* Effet glitch sur le titre */
@@ -118,16 +157,60 @@ html {
     to bottom,
     rgba(0, 0, 0, 0) 0px,
     rgba(0, 0, 0, 0) 2px,
-    rgba(0, 255, 65, 0.03) 3px,
+    rgb(var(--c-neon) / 0.03) 3px,
     rgba(0, 0, 0, 0) 4px
   );
   mix-blend-mode: screen;
 }
 
+/* Vignette + scintillement type vieux moniteur CRT */
+.crt-vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
+}
+.crt-flicker {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  background: rgb(var(--c-neon) / 0.02);
+  mix-blend-mode: screen;
+  animation: crt-flicker 4s infinite steps(60);
+}
+@keyframes crt-flicker {
+  0%, 100% { opacity: 0.10; }
+  8% { opacity: 0.22; }
+  9% { opacity: 0.06; }
+  20% { opacity: 0.14; }
+  50% { opacity: 0.10; }
+  70% { opacity: 0.18; }
+  71% { opacity: 0.05; }
+}
+
+/* Lueur qui suit le curseur */
+.cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 47;
+  width: 340px;
+  height: 340px;
+  margin: -170px 0 0 -170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--c-green) / 0.10), transparent 60%);
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
 /* Grille subtile en arrière-plan */
 .grid-bg {
-  background-image: linear-gradient(rgba(34, 197, 94, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 197, 94, 0.04) 1px, transparent 1px);
+  background-image: linear-gradient(rgb(var(--c-green) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--c-green) / 0.04) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
@@ -143,7 +226,7 @@ html {
   border-radius: inherit;
   background: radial-gradient(
     circle at var(--mx, 50%) var(--my, 50%),
-    rgba(74, 222, 128, 0.12),
+    rgb(var(--c-bright) / 0.12),
     transparent 45%
   );
   opacity: 0;
@@ -177,6 +260,28 @@ html {
   animation: blink 1s step-end infinite;
 }
 
+/* Terminal interactif */
+.term-input {
+  caret-color: var(--term-green);
+}
+
+/* Séquence de démarrage (boot) */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--c-bg));
+  transition: opacity 0.5s ease;
+}
+.boot.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Désactivation des animations : préférence système OU réglage utilisateur */
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -194,4 +299,28 @@ html {
   .card-3d {
     transition: none;
   }
+  .crt-flicker,
+  .cursor-glow {
+    display: none;
+  }
+}
+html.motion-off .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+html.motion-off .cursor,
+html.motion-off .type-cursor::after {
+  animation: none;
+}
+html.motion-off .glitch::before,
+html.motion-off .glitch::after {
+  display: none;
+}
+html.motion-off .card-3d {
+  transition: none;
+}
+html.motion-off .crt-flicker,
+html.motion-off .cursor-glow {
+  display: none;
 }

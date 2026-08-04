@@ -19,7 +19,7 @@ const text = ref('')
 let timer: ReturnType<typeof setTimeout> | undefined
 
 onMounted(() => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const reduceMotion = isReducedMotion()
   if (reduceMotion) {
     text.value = props.phrases[0] || ''
     return

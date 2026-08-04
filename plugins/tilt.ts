@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.directive('tilt', {
     // mounted ne s'exécute que côté client, l'accès au DOM est donc sûr
     mounted(el: HTMLElement & { __tilt?: TiltHandlers }) {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      if (isReducedMotion()) return
 
       const move = (e: PointerEvent) => {
         const r = el.getBoundingClientRect()

@@ -50,10 +50,7 @@ function decode() {
 onMounted(() => {
   const node = el.value
   if (!node) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !('IntersectionObserver' in window)
-  ) {
+  if (isReducedMotion() || !('IntersectionObserver' in window)) {
     display.value = props.text
     return
   }

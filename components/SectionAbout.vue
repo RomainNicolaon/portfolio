@@ -49,6 +49,12 @@ const { profile } = usePortfolio()
           </dl>
         </aside>
       </div>
+
+      <div class="mt-8">
+        <ClientOnly>
+          <GithubStats />
+        </ClientOnly>
+      </div>
     </div>
   </section>
 </template>

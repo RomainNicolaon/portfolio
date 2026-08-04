@@ -1,0 +1,15 @@
+export type Theme = 'green' | 'amber' | 'blue'
+export type MotionPref = 'auto' | 'reduced'
+
+export const THEMES: { id: Theme; label: string }[] = [
+  { id: 'green', label: 'green' },
+  { id: 'amber', label: 'amber' },
+  { id: 'blue', label: 'blue' },
+]
+
+export function useSettings() {
+  const theme = useState<Theme>('settings:theme', () => 'green')
+  const sound = useState<boolean>('settings:sound', () => false)
+  const motion = useState<MotionPref>('settings:motion', () => 'auto')
+  return { theme, sound, motion }
+}

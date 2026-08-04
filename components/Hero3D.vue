@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import * as THREE from 'three'
+import type * as THREE_NS from 'three'
 
 const el = ref<HTMLElement | null>(null)
 
 let frameId = 0
-let renderer: THREE.WebGLRenderer | null = null
-let scene: THREE.Scene | null = null
-let camera: THREE.PerspectiveCamera | null = null
-let group: THREE.Group | null = null
-let spinner: THREE.Group | null = null
-let dust: THREE.Points | null = null
+let renderer: THREE_NS.WebGLRenderer | null = null
+let scene: THREE_NS.Scene | null = null
+let camera: THREE_NS.PerspectiveCamera | null = null
+let group: THREE_NS.Group | null = null
+let spinner: THREE_NS.Group | null = null
+let dust: THREE_NS.Points | null = null
 const disposables: { dispose: () => void }[] = []
 const pointer = { x: 0, y: 0 }
 
@@ -28,11 +28,14 @@ function onResize() {
   camera.updateProjectionMatrix()
 }
 
-onMounted(() => {
+onMounted(async () => {
   const container = el.value
   if (!container || typeof window === 'undefined') return
 
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // Three.js n'est chargé qu'à la demande, hors du bundle initial.
+  const THREE = await import('three')
+
+  const reduce = isReducedMotion()
   const w = container.clientWidth
   const h = container.clientHeight
 

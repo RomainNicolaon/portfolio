@@ -18,7 +18,7 @@ export const profile: Profile = {
     'Passionné par le code propre et les systèmes robustes.',
   ],
   location: 'Bourges, France',
-  website: 'https://nicolaon.fr',
+  website: 'https://www.nicolaon.fr',
   available: true,
   about: [
     "Développeur full-stack avec plusieurs années d'expérience dans la conception d'applications web modernes.",
