@@ -11,6 +11,21 @@
   --term-neon: #00ff41;
 }
 
+@layer base {
+  html {
+    background-color: #0a0e0a;
+  }
+  body {
+    background-color: #0a0e0a;
+    color: #7a9a7a;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+  ::selection {
+    background-color: #22c55e;
+    color: #0a0e0a;
+  }
+}
+
 html {
   scrollbar-color: #22c55e #0a0e0a;
 }
