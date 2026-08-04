@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type * as THREE_NS from 'three'
 
+const { theme } = useSettings()
 const el = ref<HTMLElement | null>(null)
 
 let frameId = 0
@@ -10,8 +11,18 @@ let camera: THREE_NS.PerspectiveCamera | null = null
 let group: THREE_NS.Group | null = null
 let spinner: THREE_NS.Group | null = null
 let dust: THREE_NS.Points | null = null
+let lineMat: THREE_NS.LineBasicMaterial | null = null
+let pointsMat: THREE_NS.PointsMaterial | null = null
+let dustMat: THREE_NS.PointsMaterial | null = null
 const disposables: { dispose: () => void }[] = []
 const pointer = { x: 0, y: 0 }
+
+function themeHex(name: string, fallback: number) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name)
+  const p = v.trim().split(/\s+/).map(Number)
+  if (p.length < 3 || p.some(Number.isNaN)) return fallback
+  return (p[0] << 16) | (p[1] << 8) | p[2]
+}
 
 function onPointerMove(e: PointerEvent) {
   pointer.x = (e.clientX / window.innerWidth) * 2 - 1
@@ -39,6 +50,10 @@ onMounted(async () => {
   const w = container.clientWidth
   const h = container.clientHeight
 
+  // Couleurs issues du thème actif (variables CSS --c-green / --c-bright).
+  const greenHex = themeHex('--c-green', 0x22c55e)
+  const brightHex = themeHex('--c-bright', 0x4ade80)
+
   scene = new THREE.Scene()
   camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100)
   camera.position.z = 5.5
@@ -57,15 +72,15 @@ onMounted(async () => {
   disposables.push(geo)
 
   const edges = new THREE.EdgesGeometry(geo)
-  const lineMat = new THREE.LineBasicMaterial({
-    color: 0x22c55e,
+  lineMat = new THREE.LineBasicMaterial({
+    color: greenHex,
     transparent: true,
     opacity: 0.55,
   })
   spinner.add(new THREE.LineSegments(edges, lineMat))
   disposables.push(edges, lineMat)
 
-  const pointsMat = new THREE.PointsMaterial({ color: 0x4ade80, size: 0.07 })
+  pointsMat = new THREE.PointsMaterial({ color: brightHex, size: 0.07 })
   spinner.add(new THREE.Points(geo, pointsMat))
   disposables.push(pointsMat)
 
@@ -74,8 +89,8 @@ onMounted(async () => {
   const positions = new Float32Array(count * 3)
   for (let i = 0; i < positions.length; i++) positions[i] = (Math.random() - 0.5) * 16
   dustGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  const dustMat = new THREE.PointsMaterial({
-    color: 0x22c55e,
+  dustMat = new THREE.PointsMaterial({
+    color: greenHex,
     size: 0.03,
     transparent: true,
     opacity: 0.45,
@@ -102,6 +117,18 @@ onMounted(async () => {
   else render()
 })
 
+// Recolore l'objet quand le thème change (sans re-créer la scène).
+watch(theme, () => {
+  nextTick(() => {
+    const g = themeHex('--c-green', 0x22c55e)
+    const b = themeHex('--c-bright', 0x4ade80)
+    lineMat?.color.setHex(g)
+    dustMat?.color.setHex(g)
+    pointsMat?.color.setHex(b)
+    if (renderer && scene && camera && isReducedMotion()) renderer.render(scene, camera)
+  })
+})
+
 onBeforeUnmount(() => {
   cancelAnimationFrame(frameId)
   window.removeEventListener('resize', onResize)
@@ -112,6 +139,7 @@ onBeforeUnmount(() => {
     renderer.domElement.remove()
   }
   renderer = scene = camera = group = spinner = dust = null
+  lineMat = pointsMat = dustMat = null
 })
 </script>
 

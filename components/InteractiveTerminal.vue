@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { profile, projects, skills, experiences, education } = usePortfolio()
 const { theme } = useSettings()
+const matrix = useMatrix()
 const sound = useSound()
 
 interface Line {
@@ -30,6 +31,7 @@ const COMMANDS = [
   'social',
   'resume',
   'theme',
+  'matrix',
   'clear',
   'date',
 ]
@@ -64,6 +66,7 @@ function run(raw: string) {
         { text: '  social      liens (GitHub, LinkedIn)' },
         { text: '  resume      télécharger le CV' },
         { text: '  theme <x>   green | amber | blue' },
+        { text: '  matrix      « wake up, Neo… »' },
         { text: '  date        date et heure' },
         { text: '  clear       vider le terminal' },
       ])
@@ -126,6 +129,15 @@ function run(raw: string) {
         push([{ text: 'usage: theme <green|amber|blue>', cls: 'text-term-dim' }])
       }
       break
+    case 'matrix': {
+      const started = matrix.start(7000)
+      push([
+        started
+          ? { text: 'Wake up, Neo… (échap pour sortir)', cls: 'text-term-green' }
+          : { text: 'Indisponible en mode animations réduites.', cls: 'text-term-dim' },
+      ])
+      break
+    }
     case 'date':
       push([{ text: new Date().toLocaleString('fr-FR') }])
       break

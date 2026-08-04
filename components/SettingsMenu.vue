@@ -47,45 +47,49 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 
     <div
       v-if="open"
-      class="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-term-border bg-term-panel p-3 text-xs shadow-2xl shadow-black/50"
+      class="absolute right-0 z-50 mt-3 w-64 rounded-lg border border-term-border bg-term-panel p-5 text-xs shadow-2xl shadow-black/50"
     >
-      <p class="mb-1 text-term-dim">// thème</p>
-      <div class="mb-3 flex gap-2">
-        <button
-          v-for="t in THEMES"
-          :key="t.id"
-          type="button"
-          class="flex-1 rounded border px-2 py-1 transition-colors"
-          :class="
-            theme === t.id
-              ? 'border-term-green text-term-bright'
-              : 'border-term-border text-term-muted hover:border-term-green'
-          "
-          @click.stop="setTheme(t.id)"
-        >
-          {{ t.label }}
-        </button>
+      <div class="mb-5">
+        <p class="mb-2.5 text-term-dim">// thème</p>
+        <div class="flex gap-2.5">
+          <button
+            v-for="t in THEMES"
+            :key="t.id"
+            type="button"
+            class="flex-1 rounded border px-2 py-1.5 transition-colors"
+            :class="
+              theme === t.id
+                ? 'border-term-green text-term-bright'
+                : 'border-term-border text-term-muted hover:border-term-green'
+            "
+            @click.stop="setTheme(t.id)"
+          >
+            {{ t.label }}
+          </button>
+        </div>
       </div>
 
-      <button
-        type="button"
-        class="flex w-full items-center justify-between rounded border border-term-border px-2 py-1.5 text-term-muted transition-colors hover:border-term-green"
-        @click.stop="toggleSound"
-      >
-        <span>son</span>
-        <span :class="sound ? 'text-term-green' : 'text-term-dim'">{{ sound ? 'on' : 'off' }}</span>
-      </button>
+      <div class="space-y-3">
+        <button
+          type="button"
+          class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
+          @click.stop="toggleSound"
+        >
+          <span>son</span>
+          <span :class="sound ? 'text-term-green' : 'text-term-dim'">{{ sound ? 'on' : 'off' }}</span>
+        </button>
 
-      <button
-        type="button"
-        class="mt-2 flex w-full items-center justify-between rounded border border-term-border px-2 py-1.5 text-term-muted transition-colors hover:border-term-green"
-        @click.stop="toggleMotion"
-      >
-        <span>animations</span>
-        <span :class="motion === 'reduced' ? 'text-term-dim' : 'text-term-green'">
-          {{ motion === 'reduced' ? 'réduites' : 'on' }}
-        </span>
-      </button>
+        <button
+          type="button"
+          class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
+          @click.stop="toggleMotion"
+        >
+          <span>animations</span>
+          <span :class="motion === 'reduced' ? 'text-term-dim' : 'text-term-green'">
+            {{ motion === 'reduced' ? 'réduites' : 'on' }}
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
