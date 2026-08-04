@@ -11,7 +11,6 @@ export function useSettings() {
   const theme = useState<Theme>('settings:theme', () => 'green')
   const sound = useState<boolean>('settings:sound', () => false)
   const motion = useState<MotionPref>('settings:motion', () => 'auto')
-  const recruiter = useState<boolean>('settings:recruiter', () => false)
   const ambient = useState<boolean>('settings:ambient', () => false)
-  return { theme, sound, motion, recruiter, ambient }
+  return { theme, sound, motion, ambient }
 }

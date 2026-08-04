@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { theme, sound, motion, recruiter, ambient } = useSettings()
+const { theme, sound, motion, ambient } = useSettings()
 const { click } = useSound()
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
@@ -21,11 +21,6 @@ function toggleSound() {
 
 function toggleMotion() {
   motion.value = motion.value === 'reduced' ? 'auto' : 'reduced'
-  click()
-}
-
-function toggleRecruiter() {
-  recruiter.value = !recruiter.value
   click()
 }
 
@@ -107,15 +102,6 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
         >
           <span>ambiance CRT</span>
           <span :class="ambient ? 'text-term-green' : 'text-term-dim'">{{ ambient ? 'on' : 'off' }}</span>
-        </button>
-
-        <button
-          type="button"
-          class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
-          @click.stop="toggleRecruiter"
-        >
-          <span>mode recruteur</span>
-          <span :class="recruiter ? 'text-term-green' : 'text-term-dim'">{{ recruiter ? 'on' : 'off' }}</span>
         </button>
       </div>
     </div>

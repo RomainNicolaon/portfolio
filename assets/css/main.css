@@ -325,29 +325,6 @@ html.motion-off .cursor-glow {
   display: none;
 }
 
-/* Mode recruteur : retire le décor CRT pour une lecture sobre et pro. */
-html.recruiter-mode .scanlines,
-html.recruiter-mode .crt-vignette,
-html.recruiter-mode .crt-flicker,
-html.recruiter-mode .cursor-glow,
-html.recruiter-mode .grid-bg {
-  display: none !important;
-}
-html.recruiter-mode .text-glow {
-  text-shadow: none !important;
-}
-html.recruiter-mode .glitch::before,
-html.recruiter-mode .glitch::after {
-  display: none !important;
-}
-html.recruiter-mode .reveal {
-  opacity: 1 !important;
-  transform: none !important;
-}
-html.recruiter-mode .card-3d {
-  transition: none !important;
-}
-
 /* Impression / export PDF : masque le décor CRT et passe en noir sur blanc */
 @media print {
   .scanlines,

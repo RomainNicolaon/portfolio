@@ -1,5 +1,5 @@
 let ctx: AudioContext | null = null
-let humNodes: { osc: OscillatorNode; osc2: OscillatorNode; gain: GainNode } | null = null
+let humNodes: { osc: OscillatorNode; whine: OscillatorNode; gain: GainNode } | null = null
 
 function ensureCtx(): AudioContext | null {
   if (typeof window === 'undefined') return null
@@ -39,27 +39,30 @@ export function useSound() {
     }
   }
 
-  // Hum d'ambiance type moniteur CRT (basse fréquence + harmonique 100 Hz).
+  // Hum d'ambiance type moniteur CRT : bourdon 120 Hz (audible) + fin sifflement du transfo (~15,7 kHz).
   function ambientOn() {
     if (humNodes || typeof window === 'undefined') return
     const c = ensureCtx()
     if (!c) return
     try {
       const osc = c.createOscillator()
-      const osc2 = c.createOscillator()
+      const whine = c.createOscillator()
       const gain = c.createGain()
+      const whineGain = c.createGain()
       osc.type = 'sine'
-      osc.frequency.value = 50
-      osc2.type = 'sine'
-      osc2.frequency.value = 100
+      osc.frequency.value = 120
+      whine.type = 'sine'
+      whine.frequency.value = 15720
       gain.gain.value = 0.0001
+      whineGain.gain.value = 0.004
       osc.connect(gain)
-      osc2.connect(gain)
+      whine.connect(whineGain)
       gain.connect(c.destination)
+      whineGain.connect(c.destination)
       osc.start()
-      osc2.start()
-      gain.gain.exponentialRampToValueAtTime(0.012, c.currentTime + 0.8)
-      humNodes = { osc, osc2, gain }
+      whine.start()
+      gain.gain.exponentialRampToValueAtTime(0.05, c.currentTime + 0.8)
+      humNodes = { osc, whine, gain }
     } catch {
       /* audio indisponible */
     }
@@ -68,10 +71,10 @@ export function useSound() {
   function ambientOff() {
     if (!humNodes || !ctx) return
     try {
-      const { osc, osc2, gain } = humNodes
+      const { osc, whine, gain } = humNodes
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4)
       osc.stop(ctx.currentTime + 0.5)
-      osc2.stop(ctx.currentTime + 0.5)
+      whine.stop(ctx.currentTime + 0.5)
     } catch {
       /* ignore */
     }
