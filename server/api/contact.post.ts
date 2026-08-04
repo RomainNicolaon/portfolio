@@ -37,11 +37,13 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig(event)
 
-  const smtpHost = String(config.smtpHost || '')
-  const smtpUser = String(config.smtpUser || '')
-  const smtpPass = String(config.smtpPass || '')
-  const contactTo = String(config.contactTo || '')
-  const contactFrom = String(config.contactFrom || '')
+  // process.env d'abord (noms simples cPanel), runtimeConfig (NUXT_*) en repli.
+  const smtpHost = process.env.SMTP_HOST || String(config.smtpHost || '')
+  const smtpUser = process.env.SMTP_USER || String(config.smtpUser || '')
+  const smtpPass = process.env.SMTP_PASS || String(config.smtpPass || '')
+  const smtpPort = process.env.SMTP_PORT || String(config.smtpPort || '')
+  const contactTo = process.env.CONTACT_TO || String(config.contactTo || '')
+  const contactFrom = process.env.CONTACT_FROM || String(config.contactFrom || '')
 
   if (!smtpHost || !smtpUser || !smtpPass) {
     throw createError({
@@ -54,7 +56,7 @@ export default defineEventHandler(async (event) => {
   const safeName = name.replace(/[\r\n]+/g, ' ')
   const safeEmail = email.replace(/[\r\n]+/g, '')
 
-  const port = Number(config.smtpPort) || 465
+  const port = Number(smtpPort) || 465
 
   const transporter = nodemailer.createTransport({
     host: smtpHost,
