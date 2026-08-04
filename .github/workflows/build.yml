@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm test
+
+      - name: Build SSR app
+        run: npm run build
+
+      # package.json des deps runtime (généré par Nitro) → racine de l'app,
+      # pour installer les deps côté O2Switch (pas d'upload de node_modules).
+      - name: Expose runtime package.json at app root
+        run: cp .output/server/package.json .output/package.json
+
+      # Passenger (O2Switch) redémarre l'app quand tmp/restart.txt change.
+      - name: Trigger app restart
+        run: mkdir -p .output/tmp && date > .output/tmp/restart.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: .output/
+          include-hidden-files: true
+          retention-days: 1

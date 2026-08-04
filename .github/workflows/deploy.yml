@@ -1,49 +1,94 @@
-name: Publish to O2Switch
+# Déploiement O2Switch (cPanel) via rsync/SSH.
+#
+# Secrets requis :
+#   CPANEL_USERNAME   Utilisateur cPanel O2Switch
+#   CPANEL_API_TOKEN  Token API cPanel (cPanel > Gérer les jetons API)
+#   CPANEL_SERVER     Hôte du serveur cPanel (ex: xxx.o2switch.net)
+#   SSH_KEY           Clé privée SSH autorisée sur le compte cPanel
+#   DEPLOY_PATH       Chemin absolu de l'app sur le serveur
+#                     (ex: /home/<user>/nodeapp)
+#   SSH_PORT          (optionnel) Port SSH, 22 par défaut
+
+name: Deploy to O2Switch
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+
   deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-
-    name: Build & Deploy project
+    needs: build
     steps:
-      - name: git-checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: 22
-          cache: npm
+          name: build
+          path: .output
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Get runner public IP
+        id: ip
+        run: echo "ipv4=$(curl -sf https://api.ipify.org || curl -sf https://ipv4.icanhazip.com)" >> "$GITHUB_OUTPUT"
 
-      - name: Build SSR app
-        run: npm run build
+      - name: Remove all whitelisted IPs
+        run: |
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove_all"
 
-      # package.json des deps runtime (généré par Nitro) → racine de l'app,
-      # pour installer les deps via "npm install" côté O2Switch (pas d'upload de node_modules).
-      - name: Expose runtime package.json at app root
-        run: cp .output/server/package.json .output/package.json
+      - name: Whitelist runner IP
+        run: |
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/add?address=${{ steps.ip.outputs.ipv4 }}&port=22"
 
-      # Passenger (O2Switch) redémarre l'app quand tmp/restart.txt change.
-      - name: Trigger app restart
-        run: mkdir -p .output/tmp && date > .output/tmp/restart.txt
+      - name: Verify runner IP is whitelisted
+        run: |
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/list" | grep "${{ steps.ip.outputs.ipv4 }}"
 
-      - name: Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
+
+      - name: Deploy with rsync
+        run: |
+          rsync --timeout=60 \
+            -e "ssh -p ${{ secrets.SSH_PORT || '22' }} -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
+            --exclude=".git" --exclude=".htaccess" --exclude=".env" \
+            --exclude="node_modules" --exclude="uploads" --exclude="logs" \
+            -av --delete .output/ \
+            "${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.DEPLOY_PATH }}"
+
+      - name: Clean SSH keys
+        if: always()
+        run: rm -rf ~/.ssh
+
+      - name: Remove all whitelisted IPs
+        if: always()
+        run: |
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
+            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove_all" || true
+
+      - name: Clean artifact
+        uses: geekyeggo/delete-artifact@v5
+        if: always()
         with:
-          server: ${{ secrets.ftp_server }}
-          username: ${{ secrets.ftp_username }}
-          password: ${{ secrets.ftp_password }}
-          local-dir: ./.output/
-          server-dir: './'
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
+          name: build
+          failOnError: false
