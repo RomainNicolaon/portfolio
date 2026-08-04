@@ -131,6 +131,29 @@ html {
   background-size: 32px 32px;
 }
 
+/* Cartes inclinables en 3D (parallaxe + reflet) */
+.card-3d {
+  transition: transform 0.15s ease;
+  transform-style: preserve-3d;
+}
+.card-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    rgba(74, 222, 128, 0.12),
+    transparent 45%
+  );
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+.card-3d.is-tilting::after {
+  opacity: 1;
+}
+
 /* Révélation au scroll */
 .reveal {
   opacity: 0;
@@ -167,5 +190,8 @@ html {
   .glitch::before,
   .glitch::after {
     display: none;
+  }
+  .card-3d {
+    transition: none;
   }
 }

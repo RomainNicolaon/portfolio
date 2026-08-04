@@ -5,7 +5,7 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 
 <template>
   <section id="hero" class="grid-bg relative overflow-hidden">
-    <MatrixRain />
+    <Hero3D />
     <div class="relative z-10 mx-auto flex min-h-[85vh] max-w-5xl flex-col justify-center px-4 py-20">
       <div
         class="max-w-3xl rounded-lg border border-term-border bg-term-panel/60 p-6 shadow-2xl shadow-black/40 sm:p-8"
