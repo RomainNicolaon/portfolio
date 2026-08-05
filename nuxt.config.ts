@@ -34,6 +34,12 @@ export default defineNuxtConfig({
     url: 'https://www.nicolaon.fr',
   },
 
+  sitemap: {
+    // Fraîcheur : lastmod = date de build ; recrawl plus rapide côté Google.
+    autoLastmod: true,
+    defaults: { changefreq: 'weekly', priority: 0.7 },
+  },
+
   runtimeConfig: {
     smtpHost: process.env.SMTP_HOST || '',
     smtpPort: process.env.SMTP_PORT || '465',

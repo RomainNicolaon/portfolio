@@ -21,7 +21,7 @@ export const profile: Profile = {
   website: 'https://www.nicolaon.fr',
   available: true,
   about: [
-    "Développeur full-stack avec plusieurs années d'expérience dans la conception d'applications web modernes.",
+    "Romain Nicolaon, développeur full-stack avec plusieurs années d'expérience dans la conception d'applications web modernes.",
     "J'aime transformer des problèmes complexes en solutions simples et élégantes, avec une attention particulière portée à la performance, la maintenabilité et l'expérience utilisateur.",
     "En dehors de mes projets, je contribue à des projets d'amis et j'apprends l'univers des systèmes Linux et de l'automatisation.",
   ],
@@ -38,6 +38,13 @@ export const profile: Profile = {
       url: 'https://www.linkedin.com/in/romain-nicolaon/',
       command: 'curl linkedin',
     },
+  ],
+  // Profils publics supplémentaires pour le sameAs (non affichés dans l'UI).
+  // Ajoute ici tes autres profils VÉRIFIÉS pour renforcer l'entité « Romain Nicolaon »
+  // (ex : X/Twitter, dev.to, Malt, Stack Overflow, about.me, Mastodon…).
+  sameAs: [
+    'https://github.com/RomainNicolaon',
+    'https://www.linkedin.com/in/romain-nicolaon/',
   ],
 }
 

@@ -23,7 +23,7 @@ export const profile: Profile = {
   website: 'https://www.nicolaon.fr',
   available: true,
   about: [
-    'Full-stack developer with several years of experience designing modern web applications.',
+    'Romain Nicolaon, full-stack developer with several years of experience designing modern web applications.',
     'I enjoy turning complex problems into simple, elegant solutions, with a strong focus on performance, maintainability and user experience.',
     'Outside of my own projects, I contribute to friends\u2019 projects and keep learning about Linux systems and automation.',
   ],
@@ -40,6 +40,13 @@ export const profile: Profile = {
       url: 'https://www.linkedin.com/in/romain-nicolaon/',
       command: 'curl linkedin',
     },
+  ],
+  // Additional public profiles for sameAs (not shown in the UI).
+  // Add your other VERIFIED profiles here to strengthen the « Romain Nicolaon » entity
+  // (e.g. X/Twitter, dev.to, Malt, Stack Overflow, about.me, Mastodon…).
+  sameAs: [
+    'https://github.com/RomainNicolaon',
+    'https://www.linkedin.com/in/romain-nicolaon/',
   ],
 }
 

@@ -32,9 +32,9 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 
         <h1
           class="glitch mt-3 text-4xl font-extrabold text-term-bright text-glow sm:text-6xl"
-          :data-text="`Portfolio ${profile.name}`"
+          :data-text="profile.name"
         >
-          Portfolio {{ profile.name }}
+          {{ profile.name }}
         </h1>
 
         <p class="mt-3 text-lg text-term-muted sm:text-2xl">

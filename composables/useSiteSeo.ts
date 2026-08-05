@@ -17,13 +17,28 @@ export function useSiteSeo() {
   const homePath = locale.value === 'en' ? '/en' : '/'
 
   const seoName = profile.name
+  const nameParts = seoName.split(/\s+/).filter(Boolean)
+  const givenName = nameParts[0] || ''
+  const familyName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : ''
+  // Renforce l'association patronyme ↔ entité pour Google (recherche par nom de famille).
+  const alternateName = Array.from(
+    new Set(
+      [seoName, givenName && familyName ? `${familyName} ${givenName}` : ''].filter(Boolean),
+    ),
+  )
   const seoTitle = profile.title ? `${seoName} — ${profile.title}` : seoName
-  const seoDescription = profile.about[0] || profile.taglines[0] || 'Portfolio'
+  const baseDescription = profile.about[0] || profile.taglines[0] || 'Portfolio'
+  // Garantit la présence du nom dans le snippet SERP (utile pour la requête « nom de famille »).
+  const nameIsPresent = familyName
+    ? baseDescription.toLowerCase().includes(familyName.toLowerCase())
+    : baseDescription.toLowerCase().includes(seoName.toLowerCase())
+  const seoDescription = nameIsPresent ? baseDescription : `${seoTitle}. ${baseDescription}`
   const seoUrl = `${base}${homePath}`
   const seoImage = `${base}/og-image.png`
   const seoImageAlt = t('seo.ogImageAlt', { title: seoTitle, name: seoName })
 
-  const sameAs = profile.socials.map((s) => s.url).filter(Boolean)
+  const socialUrls = profile.socials.map((s) => s.url).filter(Boolean)
+  const sameAs = Array.from(new Set([...socialUrls, ...(profile.sameAs ?? [])].filter(Boolean)))
   const knowsAbout = skills.flatMap((group) => group.items)
 
   const alumniOf = education
@@ -91,6 +106,9 @@ export function useSiteSeo() {
       '@type': 'Person',
       '@id': `${base}/#person`,
       name: seoName,
+      ...(givenName ? { givenName } : {}),
+      ...(familyName ? { familyName } : {}),
+      ...(alternateName.length ? { alternateName } : {}),
       url: `${base}/`,
       ...(profile.title ? { jobTitle: profile.title } : {}),
       ...(profile.about[0] ? { description: profile.about[0] } : {}),
@@ -120,7 +138,9 @@ export function useSiteSeo() {
     title: seoTitle,
     description: seoDescription,
     author: seoName,
-    keywords: knowsAbout.slice(0, 15).join(', '),
+    keywords: [seoName, ...alternateName, ...knowsAbout.slice(0, 12)]
+      .filter(Boolean)
+      .join(', '),
     ogType: 'profile',
     ogSiteName: seoName,
     ogTitle: seoTitle,

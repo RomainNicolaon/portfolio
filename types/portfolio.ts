@@ -17,6 +17,12 @@ export interface Profile {
   email: string
   resume: string
   socials: Social[]
+  /**
+   * Profils publics supplémentaires (X, dev.to, Malt, Stack Overflow, about.me…) injectés
+   * dans le `sameAs` du schema Person/Organization, sans être affichés dans l'UI.
+   * N'ajouter que des profils réels et vérifiés — renforce l'entité aux yeux de Google.
+   */
+  sameAs?: string[]
 }
 
 export interface Experience {
