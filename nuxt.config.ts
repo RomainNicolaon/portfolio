@@ -89,15 +89,15 @@ export default defineNuxtConfig({
         { name: 'robots', content: 'index, follow, max-image-preview:large' },
       ],
       link: [
-        {
-          rel: 'icon',
-          type: 'image/svg+xml',
-          href: '/favicon.svg',
-        },
+        // Raster crawlable en premier : maximise la sélection de la favicon par
+        // Google (le 48x48 est la taille canonique recommandée). Le SVG reste
+        // déclaré pour les navigateurs modernes, mais après les rasters.
+        { rel: 'shortcut icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48x48.png' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
-        { rel: 'shortcut icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/site.webmanifest' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
