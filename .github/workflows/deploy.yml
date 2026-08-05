@@ -22,7 +22,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: deploy-o2switch
   cancel-in-progress: false
 
 jobs:
@@ -44,11 +44,6 @@ jobs:
       - name: Get runner public IP
         id: ip
         run: echo "ipv4=$(curl -sf https://api.ipify.org || curl -sf https://ipv4.icanhazip.com)" >> "$GITHUB_OUTPUT"
-
-      - name: Remove all whitelisted IPs
-        run: |
-          curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
-            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove_all"
 
       - name: Whitelist runner IP
         run: |
@@ -80,11 +75,11 @@ jobs:
         if: always()
         run: rm -rf ~/.ssh
 
-      - name: Remove all whitelisted IPs
-        if: always()
+      - name: Remove runner IP from whitelist
+        if: always() && steps.ip.outputs.ipv4 != ''
         run: |
           curl -sm 45 -H "Authorization: cpanel ${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_API_TOKEN }}" \
-            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove_all" || true
+            "https://${{ secrets.CPANEL_SERVER }}:2083/execute/SshWhitelist/remove?address=${{ steps.ip.outputs.ipv4 }}" || true
 
       - name: Clean artifact
         uses: geekyeggo/delete-artifact@v5
