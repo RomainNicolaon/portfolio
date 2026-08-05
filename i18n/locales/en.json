@@ -84,7 +84,8 @@
     "off": "off",
     "reduced": "reduced",
     "aria": "Display settings",
-    "title": "Settings"
+    "title": "Settings",
+    "statusbar": "status bar"
   },
   "palette": {
     "placeholder": "Type a command…",
@@ -158,7 +159,7 @@
       "social": "links (GitHub, LinkedIn)",
       "resume": "download résumé",
       "theme": "green / amber / blue",
-      "matrix": "\u201cwake up, Neo\u2026\u201d",
+      "matrix": "“wake up, Neo…”",
       "snake": "small ASCII game",
       "tetris": "ASCII Tetris",
       "breakout": "ASCII Breakout",
@@ -193,10 +194,10 @@
     "cowDefault": "moo!",
     "historyEmpty": "no command in history",
     "manUsage": "usage: man <command>",
-    "manNone": "no manual entry for \u201c{name}\u201d",
+    "manNone": "no manual entry for “{name}”",
     "man": {
       "about": "shows a detailed introduction.",
-      "projects": "lists projects; see also \u201copen <project>\u201d.",
+      "projects": "lists projects; see also “open <project>”.",
       "skills": "lists skills by category.",
       "theme": "changes the theme: theme <green/amber/blue>.",
       "matrix": "launches the Matrix effect (esc to exit).",
@@ -271,5 +272,8 @@
     },
     "notFound": "command not found: {name} — type 'help'",
     "dateLocale": "en-US"
+  },
+  "statusbar": {
+    "aria": "Status bar"
   }
 }

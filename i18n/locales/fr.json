@@ -74,7 +74,8 @@
   },
   "footer": {
     "builtWith": "Construit avec"
-  },  "settings": {
+  },
+  "settings": {
     "theme": "// thème",
     "sound": "son",
     "animations": "animations",
@@ -83,7 +84,8 @@
     "off": "off",
     "reduced": "réduites",
     "aria": "Réglages d'affichage",
-    "title": "Réglages"
+    "title": "Réglages",
+    "statusbar": "barre de statut"
   },
   "palette": {
     "placeholder": "Tapez une commande…",
@@ -129,7 +131,8 @@
   },
   "error": {
     "system": "erreur système"
-  },  "projectPage": {
+  },
+  "projectPage": {
     "breadcrumbProjects": "projects",
     "metaTitle": "{name} — Projet de {author}",
     "year": "année {year}",
@@ -269,5 +272,8 @@
     },
     "notFound": "command not found: {name} — tape 'help'",
     "dateLocale": "fr-FR"
+  },
+  "statusbar": {
+    "aria": "Barre de statut"
   }
 }

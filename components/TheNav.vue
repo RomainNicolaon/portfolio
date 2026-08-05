@@ -41,16 +41,17 @@ const links = [
 
       <ul class="hidden items-center gap-4 xl:flex">
         <li v-for="link in links" :key="link.href">
-          <NuxtLink :to="home + link.href" class="text-term-muted transition-colors hover:text-term-bright">{{
-            link.label
-          }}</NuxtLink>
+          <NuxtLink :to="home + link.href" class="text-term-muted transition-colors hover:text-term-bright">
+            <ScrambleHover :text="link.label" />
+          </NuxtLink>
         </li>
         <li>
           <NuxtLink
             :to="home + '#contact'"
             class="rounded border border-term-green px-3 py-1 text-term-bright transition-colors hover:bg-term-green hover:text-term-bg"
-            >./contact</NuxtLink
           >
+            <ScrambleHover text="./contact" />
+          </NuxtLink>
         </li>
       </ul>
 

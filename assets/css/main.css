@@ -57,6 +57,42 @@
   --c-neon: 255 0 200;
 }
 
+/* Thème « dracula » — violet/rose sur nuit. */
+[data-theme='dracula'] {
+  --c-bg: 30 32 44;
+  --c-panel: 40 42 54;
+  --c-border: 68 71 90;
+  --c-dim: 98 114 164;
+  --c-muted: 189 147 249;
+  --c-green: 80 250 123;
+  --c-bright: 139 233 253;
+  --c-neon: 255 121 198;
+}
+
+/* Thème « nord » — bleu givré scandinave. */
+[data-theme='nord'] {
+  --c-bg: 32 37 46;
+  --c-panel: 46 52 64;
+  --c-border: 59 66 82;
+  --c-dim: 76 86 106;
+  --c-muted: 216 222 233;
+  --c-green: 136 192 208;
+  --c-bright: 143 188 187;
+  --c-neon: 129 161 193;
+}
+
+/* Thème « solarized » (dark) — cyan/vert sur base03. */
+[data-theme='solarized'] {
+  --c-bg: 0 33 42;
+  --c-panel: 0 43 54;
+  --c-border: 7 54 66;
+  --c-dim: 88 110 117;
+  --c-muted: 147 161 161;
+  --c-green: 42 161 152;
+  --c-bright: 133 153 0;
+  --c-neon: 38 139 210;
+}
+
 @layer base {
   html {
     background-color: var(--term-bg);
@@ -293,6 +329,87 @@ html {
   pointer-events: none;
 }
 
+/* Animation d'allumage type vieux téléviseur, jouée au changement de thème. */
+.crt-power {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 61;
+  background: rgb(var(--c-neon));
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: crt-power 0.55s ease-out forwards;
+}
+.crt-power::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgb(var(--c-bright));
+  box-shadow: 0 0 12px 4px rgb(var(--c-neon) / 0.8);
+  transform: scaleY(1);
+  animation: crt-scanline 0.55s ease-out forwards;
+}
+@keyframes crt-power {
+  0% { opacity: 0; }
+  12% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+@keyframes crt-scanline {
+  0% { transform: scaleX(0.2) scaleY(60); opacity: 0.9; }
+  40% { transform: scaleX(1) scaleY(1); opacity: 0.9; }
+  100% { transform: scaleX(1) scaleY(0.2); opacity: 0; }
+}
+
+/* Barre de statut façon tmux, fixée en bas de l'écran. */
+.status-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+  font-size: 11px;
+  line-height: 1;
+  background: rgb(var(--c-panel) / 0.92);
+  border-top: 1px solid rgb(var(--c-border));
+  color: rgb(var(--c-muted));
+  backdrop-filter: blur(4px);
+  user-select: none;
+}
+.status-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+/* Réserve la place de la barre pour ne pas masquer le bas de page. */
+html.has-statusbar body {
+  padding-bottom: 26px;
+}
+
+/* Transitions de page (fondu + léger décalage), désactivées si reduced motion. */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+  filter: brightness(1.4) saturate(1.3);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+  filter: brightness(1.4) saturate(1.3);
+}
+
 /* Désactivation des animations : préférence système OU réglage utilisateur */
 @media (prefers-reduced-motion: reduce) {
   .reveal {
@@ -315,6 +432,19 @@ html {
   .cursor-glow {
     display: none;
   }
+  .crt-power {
+    display: none;
+  }
+  .page-enter-active,
+  .page-leave-active {
+    transition: none;
+  }
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 html.motion-off .reveal {
   opacity: 1;
@@ -336,12 +466,27 @@ html.motion-off .crt-flicker,
 html.motion-off .cursor-glow {
   display: none;
 }
+html.motion-off .crt-power {
+  display: none;
+}
+html.motion-off .page-enter-active,
+html.motion-off .page-leave-active {
+  transition: none;
+}
+html.motion-off .page-enter-from,
+html.motion-off .page-leave-to {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
 
 /* Impression / export PDF : masque le décor CRT et passe en noir sur blanc */
 @media print {
   .scanlines,
   .crt-vignette,
   .crt-flicker,
+  .crt-power,
+  .status-bar,
   .cursor-glow,
   nav,
   footer,
