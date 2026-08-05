@@ -95,6 +95,9 @@
     "theme": "Change theme (current: {theme})",
     "matrix": "Launch the Matrix effect",
     "snake": "Play Snake",
+    "tetris": "Play Tetris",
+    "breakout": "Play Breakout",
+    "pong": "Play Pong",
     "resume": "Download résumé",
     "github": "Open GitHub",
     "hintSection": "section",
@@ -105,6 +108,25 @@
   "matrix": {
     "hint": "esc / click to exit",
     "close": "Close the Matrix effect"
+  },
+  "toast": {
+    "cheatUnlocked": "Cheat unlocked! 🎉",
+    "synthwaveHint": "Secret theme “synthwave” enabled"
+  },
+  "arcade": {
+    "best": "best",
+    "quit": "Quit the game",
+    "gameOver": "game over",
+    "replay": "play again (space)",
+    "win": "you win!",
+    "lose": "you lose",
+    "you": "you",
+    "tetrisTitle": "Tetris game",
+    "breakoutTitle": "Breakout game",
+    "pongTitle": "Pong game",
+    "tetrisHelp": "←→ move · ↑ rotate · ↓ soft drop · space hard drop · esc quit",
+    "breakoutHelp": "←→ / A D to move the paddle · space to replay · esc to quit",
+    "pongHelp": "↑↓ / W S to move · first to 5 · space to replay · esc to quit"
   },
   "error": {
     "system": "system error"
@@ -138,6 +160,16 @@
       "theme": "green / amber / blue",
       "matrix": "\u201cwake up, Neo\u2026\u201d",
       "snake": "small ASCII game",
+      "tetris": "ASCII Tetris",
+      "breakout": "ASCII Breakout",
+      "pong": "ASCII Pong (vs CPU)",
+      "hack": "totally real intrusion (nmap)",
+      "fortune": "a random quote",
+      "sl": "you typed it wrong… 🚂",
+      "ping": "ping a host",
+      "top": "fake system monitor",
+      "coffee": "brew a coffee ☕",
+      "logs": "boot logs (clickable anecdotes)",
       "neofetch": "system info (Linux style)",
       "cowsay": "a cow says it for you",
       "curl": "details of a project",
@@ -208,6 +240,35 @@
     "sudoGranted": "Access granted ✅",
     "sudoWrite": "Write to me: {email}",
     "sudoNotSudoers": "{handle} is not in the sudoers file. This incident will be reported.",
+    "gameStart": "launching {game}.exe… (esc to quit)",
+    "hackJoke": "…just kidding — this is a portfolio, not the Pentagon 😄",
+    "pingStats": "4 packets transmitted, 4 received, 0% packet loss",
+    "slJoke": "you meant 'ls', right? enjoy the train anyway 🚂",
+    "topHeader": "tasks: 6 running · load average: 0.42, 0.37, 0.31",
+    "topFooter": "press q to quit (just kidding, it's already done)",
+    "coffee": "HTTP 418 — I'm a teapot. Coffee brewing anyway ☕",
+    "fortunes": [
+      "Talk is cheap. Show me the code. — Linus Torvalds",
+      "There are only two hard things in CS: cache invalidation and naming things.",
+      "It works on my machine. ¯\\_(ツ)_/¯",
+      "Weeks of coding can save you hours of planning.",
+      "First, solve the problem. Then, write the code.",
+      "A good programmer looks both ways before crossing a one-way street."
+    ],
+    "logsBoot": "== journalctl -b (portfolio.os) ==",
+    "logsHint": "→ click a line marked ⓘ to reveal an anecdote",
+    "logs": {
+      "l1": "loaded personality module",
+      "a1": "I started coding at 14, tweaking Minecraft mods before I knew what a variable was.",
+      "l2": "mounted /coffee",
+      "a2": "This portfolio was fuelled by roughly one espresso per component.",
+      "l3": "initialized side-projects daemon",
+      "a3": "I have a folder of half-finished projects. This one actually shipped.",
+      "l4": "enabled dark mode by default",
+      "a4": "I physically cannot use a light-theme IDE. My eyes filed a complaint.",
+      "l5": "detected 42 unread tabs",
+      "a5": "Yes, I'm one of those. The tabs are 'research'. They will never be read."
+    },
     "notFound": "command not found: {name} — type 'help'",
     "dateLocale": "en-US"
   }

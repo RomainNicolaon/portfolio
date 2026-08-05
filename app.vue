@@ -52,7 +52,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
         </p>
       </div>
       <SnakeGame v-if="arcade.active.value === 'snake'" />
+      <TetrisGame v-if="arcade.active.value === 'tetris'" />
+      <BreakoutGame v-if="arcade.active.value === 'breakout'" />
+      <PongGame v-if="arcade.active.value === 'pong'" />
       <CommandPalette />
+      <AppToast />
     </ClientOnly>
 
     <TheNav />

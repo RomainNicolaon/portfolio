@@ -1,6 +1,8 @@
-// Konami code (↑ ↑ ↓ ↓ ← → ← → B A) → déclenche l'effet Matrix.
+// Konami code (↑ ↑ ↓ ↓ ← → ← → B A) → débloque le thème secret « synthwave ».
 export default defineNuxtPlugin(() => {
-  const matrix = useMatrix()
+  const { theme, secretUnlocked } = useSettings()
+  const toast = useToast()
+  const sound = useSound()
   const sequence = [
     'ArrowUp',
     'ArrowUp',
@@ -20,7 +22,11 @@ export default defineNuxtPlugin(() => {
     pos = key === sequence[pos] ? pos + 1 : key === sequence[0] ? 1 : 0
     if (pos === sequence.length) {
       pos = 0
-      matrix.start(9000)
+      secretUnlocked.value = true
+      theme.value = 'synthwave'
+      sound.ok()
+      const { t } = useNuxtApp().$i18n as { t: (k: string) => string }
+      toast.push(t('toast.cheatUnlocked'), t('toast.synthwaveHint'))
     }
   })
 })

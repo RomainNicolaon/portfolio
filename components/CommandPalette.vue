@@ -32,12 +32,16 @@ const commands = computed<Cmd[]>(() => [
     label: t('palette.theme', { theme: theme.value }),
     hint: t('palette.hintAction'),
     run: () => {
-      const order = ['green', 'amber', 'blue'] as const
-      theme.value = order[(order.indexOf(theme.value) + 1) % order.length]
+      const order: Theme[] = ['green', 'amber', 'blue']
+      const idx = order.indexOf(theme.value)
+      theme.value = order[(idx + 1) % order.length]
     },
   },
   { id: 'matrix', label: t('palette.matrix'), hint: t('palette.hintFun'), run: () => matrix.start(7000) },
   { id: 'snake', label: t('palette.snake'), hint: t('palette.hintFun'), run: () => arcade.start('snake') },
+  { id: 'tetris', label: t('palette.tetris'), hint: t('palette.hintFun'), run: () => arcade.start('tetris') },
+  { id: 'breakout', label: t('palette.breakout'), hint: t('palette.hintFun'), run: () => arcade.start('breakout') },
+  { id: 'pong', label: t('palette.pong'), hint: t('palette.hintFun'), run: () => arcade.start('pong') },
   {
     id: 'resume',
     label: t('palette.resume'),

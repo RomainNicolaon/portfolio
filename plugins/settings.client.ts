@@ -1,13 +1,16 @@
 // Applique les réglages (thème, mouvement) au DOM et les persiste en localStorage.
 export default defineNuxtPlugin(() => {
-  const { theme, sound, motion, ambient } = useSettings()
+  const { theme, sound, motion, ambient, secretUnlocked } = useSettings()
   const KEY = 'portfolio:settings'
 
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) {
       const s = JSON.parse(raw)
-      if (s.theme === 'green' || s.theme === 'amber' || s.theme === 'blue') theme.value = s.theme
+      if (typeof s.secretUnlocked === 'boolean') secretUnlocked.value = s.secretUnlocked
+      const themes = ['green', 'amber', 'blue']
+      if (secretUnlocked.value) themes.push('synthwave')
+      if (themes.includes(s.theme)) theme.value = s.theme
       if (typeof s.sound === 'boolean') sound.value = s.sound
       if (s.motion === 'auto' || s.motion === 'reduced') motion.value = s.motion
       if (typeof s.ambient === 'boolean') ambient.value = s.ambient
@@ -24,7 +27,7 @@ export default defineNuxtPlugin(() => {
 
   apply()
 
-  watch([theme, sound, motion, ambient], () => {
+  watch([theme, sound, motion, ambient, secretUnlocked], () => {
     apply()
     try {
       localStorage.setItem(
@@ -34,6 +37,7 @@ export default defineNuxtPlugin(() => {
           sound: sound.value,
           motion: motion.value,
           ambient: ambient.value,
+          secretUnlocked: secretUnlocked.value,
         }),
       )
     } catch {

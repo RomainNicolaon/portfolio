@@ -1,9 +1,12 @@
 <script setup lang="ts">
-const { theme, sound, motion, ambient } = useSettings()
+const { theme, sound, motion, ambient, secretUnlocked } = useSettings()
 const { click } = useSound()
 const { t } = useI18n()
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
+
+// Ajoute le thème secret à la liste une fois débloqué via le Konami code.
+const themeList = computed(() => (secretUnlocked.value ? [...THEMES, SECRET_THEME] : THEMES))
 
 function toggleMenu() {
   open.value = !open.value
@@ -57,12 +60,12 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
     >
       <div class="mb-5">
         <p class="mb-2.5 text-term-dim">{{ t('settings.theme') }}</p>
-        <div class="flex gap-2.5">
+        <div class="flex flex-wrap gap-2.5">
           <button
-            v-for="th in THEMES"
+            v-for="th in themeList"
             :key="th.id"
             type="button"
-            class="flex-1 rounded border px-2 py-1.5 transition-colors"
+            class="min-w-[3.5rem] flex-1 rounded border px-2 py-1.5 transition-colors"
             :class="
               theme === th.id
                 ? 'border-term-green text-term-bright'

@@ -4,11 +4,13 @@ const { theme } = useSettings()
 const matrix = useMatrix()
 const arcade = useArcade()
 const sound = useSound()
-const { t, te } = useI18n()
+const { t, te, tm, rt } = useI18n()
 
 interface Line {
   text: string
   cls?: string
+  anecdote?: string
+  revealed?: boolean
 }
 
 const prompt = `${profile.handle}@${profile.host}:~$`
@@ -37,6 +39,17 @@ const COMMANDS = [
   'curl',
   'weather',
   'snake',
+  'tetris',
+  'breakout',
+  'pong',
+  'hack',
+  'nmap',
+  'fortune',
+  'sl',
+  'ping',
+  'top',
+  'coffee',
+  'logs',
   'history',
   'man',
   'open',
@@ -77,6 +90,16 @@ function run(raw: string) {
         { text: `  theme <x>   ${t('terminal.help.theme')}` },
         { text: `  matrix      ${t('terminal.help.matrix')}` },
         { text: `  snake       ${t('terminal.help.snake')}` },
+        { text: `  tetris      ${t('terminal.help.tetris')}` },
+        { text: `  breakout    ${t('terminal.help.breakout')}` },
+        { text: `  pong        ${t('terminal.help.pong')}` },
+        { text: `  hack <host> ${t('terminal.help.hack')}` },
+        { text: `  fortune     ${t('terminal.help.fortune')}` },
+        { text: `  sl          ${t('terminal.help.sl')}` },
+        { text: `  ping <host> ${t('terminal.help.ping')}` },
+        { text: `  top         ${t('terminal.help.top')}` },
+        { text: `  coffee      ${t('terminal.help.coffee')}` },
+        { text: `  logs        ${t('terminal.help.logs')}` },
         { text: `  neofetch    ${t('terminal.help.neofetch')}` },
         { text: `  cowsay <m>  ${t('terminal.help.cowsay')}` },
         { text: `  curl <proj> ${t('terminal.help.curl')}` },
@@ -283,6 +306,75 @@ function run(raw: string) {
       push([{ text: t('terminal.snakeStart'), cls: 'text-term-green' }])
       break
     }
+    case 'tetris': {
+      arcade.start('tetris')
+      push([{ text: t('terminal.gameStart', { game: 'tetris' }), cls: 'text-term-green' }])
+      break
+    }
+    case 'breakout': {
+      arcade.start('breakout')
+      push([{ text: t('terminal.gameStart', { game: 'breakout' }), cls: 'text-term-green' }])
+      break
+    }
+    case 'pong': {
+      arcade.start('pong')
+      push([{ text: t('terminal.gameStart', { game: 'pong' }), cls: 'text-term-green' }])
+      break
+    }
+    case 'hack':
+    case 'nmap': {
+      hack(args[0] || profile.host)
+      break
+    }
+    case 'fortune': {
+      const list = tm('terminal.fortunes') as unknown[]
+      const pick = list.length ? rt(list[Math.floor(Math.random() * list.length)] as string) : ''
+      push([{ text: `“ ${pick} ”`, cls: 'text-term-bright' }])
+      break
+    }
+    case 'sl': {
+      steamTrain()
+      break
+    }
+    case 'ping': {
+      pingHost(args[0] || profile.website.replace(/^https?:\/\//, '') || profile.host)
+      break
+    }
+    case 'top': {
+      const procs = [
+        ['1337', 'nuxt', '12.4', '148M'],
+        ['2048', 'vue-devtools', '6.1', '92M'],
+        ['0042', 'coffee-daemon', '99.9', '512M'],
+        ['0007', 'three.js', '8.7', '210M'],
+        ['4711', 'tailwind-jit', '2.3', '64M'],
+        ['3141', 'lofi-beats', '1.1', '31M'],
+      ]
+      push([
+        { text: t('terminal.topHeader'), cls: 'text-term-dim' },
+        { text: '  PID   COMMAND         %CPU    MEM', cls: 'text-term-bright' },
+        ...procs.map((p) => ({
+          text: `  ${p[0].padEnd(5)} ${p[1].padEnd(15)} ${p[2].padStart(4)}   ${p[3].padStart(5)}`,
+        })),
+        { text: t('terminal.topFooter'), cls: 'text-term-dim' },
+      ])
+      break
+    }
+    case 'coffee': {
+      push([
+        { text: '      ( (', cls: 'text-term-bright' },
+        { text: '       ) )', cls: 'text-term-bright' },
+        { text: '    ........', cls: 'text-term-green' },
+        { text: '    |      |]', cls: 'text-term-green' },
+        { text: '    \\      /', cls: 'text-term-green' },
+        { text: "     `----'", cls: 'text-term-green' },
+        { text: t('terminal.coffee'), cls: 'text-term-dim' },
+      ])
+      break
+    }
+    case 'logs': {
+      showLogs()
+      break
+    }
     case 'curl': {
       const q = (args[0] || '').toLowerCase()
       if (!q) {
@@ -364,7 +456,76 @@ async function weather() {
   }
 }
 
-// Suggestion « fantôme » (historique puis commandes), à la fish shell.
+// Anime l'affichage ligne par ligne (instantané si animations réduites).
+function animate(lines: Line[], step = 240) {
+  if (isReducedMotion()) {
+    push(lines)
+    return
+  }
+  let d = 0
+  for (const l of lines) {
+    d += step
+    setTimeout(() => push([l]), d)
+  }
+}
+
+function hack(host: string) {
+  animate([
+    { text: `$ nmap -sS -T4 ${host}`, cls: 'text-term-dim' },
+    { text: 'Starting Nmap 7.94 ( https://nmap.org )' },
+    { text: `Scanning ${host} …` },
+    { text: 'Discovered open port 22/tcp   (ssh)', cls: 'text-term-green' },
+    { text: 'Discovered open port 80/tcp   (http)', cls: 'text-term-green' },
+    { text: 'Discovered open port 443/tcp  (https)', cls: 'text-term-green' },
+    { text: 'bypassing firewall  [■■■■■□□□□□]  50%' },
+    { text: 'bypassing firewall  [■■■■■■■■■■] 100%' },
+    { text: 'ACCESS GRANTED ▓▓▓', cls: 'text-term-bright' },
+    { text: t('terminal.hackJoke'), cls: 'text-term-dim' },
+  ])
+}
+
+function pingHost(host: string) {
+  const lines: Line[] = [{ text: `PING ${host}: 56 data bytes`, cls: 'text-term-dim' }]
+  for (let i = 0; i < 4; i++) {
+    const ms = (Math.random() * 30 + 5).toFixed(1)
+    lines.push({ text: `64 bytes from ${host}: icmp_seq=${i} ttl=64 time=${ms} ms` })
+  }
+  lines.push({ text: t('terminal.pingStats'), cls: 'text-term-green' })
+  animate(lines, 200)
+}
+
+function steamTrain() {
+  push([
+    { text: '      ====        ________                ___________', cls: 'text-term-green' },
+    { text: '  _D _|  |_______/        \\__I_I_____===__|_________|', cls: 'text-term-green' },
+    { text: "   |(_)---  |   H\\________/ |   |        =|___ ___|", cls: 'text-term-green' },
+    { text: '   /     |  |   H  |  |     |   |         ||_| |_||', cls: 'text-term-green' },
+    { text: '  |      |  |   H  |__--------------------| [___] |', cls: 'text-term-green' },
+    { text: '  | ________|___H__/__|_____/[][]~\\_______|       |', cls: 'text-term-green' },
+    { text: '  |/ |   |-----------I_____I [][] []  D   |=======|__', cls: 'text-term-green' },
+    { text: t('terminal.slJoke'), cls: 'text-term-dim' },
+  ])
+}
+
+function showLogs() {
+  push([
+    { text: t('terminal.logsBoot'), cls: 'text-term-green' },
+    { text: `[  OK  ] ${t('terminal.logs.l1')}`, anecdote: t('terminal.logs.a1') },
+    { text: `[  OK  ] ${t('terminal.logs.l2')}`, anecdote: t('terminal.logs.a2') },
+    { text: `[  OK  ] ${t('terminal.logs.l3')}`, anecdote: t('terminal.logs.a3') },
+    { text: `[  OK  ] ${t('terminal.logs.l4')}`, anecdote: t('terminal.logs.a4') },
+    { text: `[ WARN ] ${t('terminal.logs.l5')}`, anecdote: t('terminal.logs.a5') },
+    { text: t('terminal.logsHint'), cls: 'text-term-dim' },
+  ])
+}
+
+function toggleLine(line: Line) {
+  if (!line.anecdote) return
+  line.revealed = !line.revealed
+  sound.click()
+}
+
+
 const ghost = computed(() => {
   const v = input.value
   if (!v) return ''
@@ -437,14 +598,30 @@ function focusField() {
       <span class="ml-auto hidden sm:inline">{{ t('terminal.hints') }}</span>
     </div>
     <div ref="scroller" class="max-h-56 overflow-y-auto px-3 py-2 text-sm leading-relaxed">
-      <p
-        v-for="(line, i) in output"
-        :key="i"
-        class="whitespace-pre-wrap break-words"
-        :class="line.cls || 'text-term-muted'"
-      >
-        {{ line.text }}
-      </p>
+      <template v-for="(line, i) in output" :key="i">
+        <button
+          v-if="line.anecdote"
+          type="button"
+          class="block w-full text-left whitespace-pre-wrap break-words transition-colors hover:text-term-bright"
+          :class="line.cls || 'text-term-muted'"
+          @click.stop="toggleLine(line)"
+        >
+          {{ line.text }} <span class="text-term-green">{{ line.revealed ? '▾' : 'ⓘ' }}</span>
+        </button>
+        <p
+          v-if="line.anecdote && line.revealed"
+          class="whitespace-pre-wrap break-words pl-4 text-term-dim"
+        >
+          ↳ {{ line.anecdote }}
+        </p>
+        <p
+          v-else-if="!line.anecdote"
+          class="whitespace-pre-wrap break-words"
+          :class="line.cls || 'text-term-muted'"
+        >
+          {{ line.text }}
+        </p>
+      </template>
       <div class="flex items-center gap-2">
         <span class="shrink-0 text-term-green">{{ prompt }}</span>
         <div class="relative w-full flex-1">

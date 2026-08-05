@@ -94,6 +94,9 @@
     "theme": "Changer de thème (actuel : {theme})",
     "matrix": "Lancer l'effet Matrix",
     "snake": "Jouer à Snake",
+    "tetris": "Jouer à Tetris",
+    "breakout": "Jouer à Breakout",
+    "pong": "Jouer à Pong",
     "resume": "Télécharger le CV",
     "github": "Ouvrir GitHub",
     "hintSection": "section",
@@ -104,6 +107,25 @@
   "matrix": {
     "hint": "échap / clic pour sortir",
     "close": "Fermer l'effet Matrix"
+  },
+  "toast": {
+    "cheatUnlocked": "Cheat débloqué ! 🎉",
+    "synthwaveHint": "Thème secret « synthwave » activé"
+  },
+  "arcade": {
+    "best": "record",
+    "quit": "Quitter le jeu",
+    "gameOver": "game over",
+    "replay": "rejouer (espace)",
+    "win": "gagné !",
+    "lose": "perdu",
+    "you": "toi",
+    "tetrisTitle": "Jeu Tetris",
+    "breakoutTitle": "Jeu Breakout",
+    "pongTitle": "Jeu Pong",
+    "tetrisHelp": "←→ déplacer · ↑ pivoter · ↓ descendre · espace chute · échap quitter",
+    "breakoutHelp": "←→ / A D pour la raquette · espace pour rejouer · échap pour quitter",
+    "pongHelp": "↑↓ / W S pour bouger · premier à 5 · espace rejouer · échap quitter"
   },
   "error": {
     "system": "erreur système"
@@ -136,6 +158,16 @@
       "theme": "green / amber / blue",
       "matrix": "« wake up, Neo… »",
       "snake": "petit jeu ASCII",
+      "tetris": "Tetris ASCII",
+      "breakout": "Breakout ASCII",
+      "pong": "Pong ASCII (contre l'ordi)",
+      "hack": "intrusion tout à fait réelle (nmap)",
+      "fortune": "une citation au hasard",
+      "sl": "tu t'es trompé de commande… 🚂",
+      "ping": "ping un hôte",
+      "top": "faux moniteur système",
+      "coffee": "prépare un café ☕",
+      "logs": "logs de démarrage (anecdotes cliquables)",
       "neofetch": "infos système (façon Linux)",
       "cowsay": "une vache le dit pour vous",
       "curl": "détails d'un projet",
@@ -206,6 +238,35 @@
     "sudoGranted": "Accès autorisé ✅",
     "sudoWrite": "Écrivez-moi : {email}",
     "sudoNotSudoers": "{handle} n'est pas dans le fichier sudoers. Cet incident sera signalé.",
+    "gameStart": "lancement de {game}.exe… (échap pour quitter)",
+    "hackJoke": "…je plaisante — c'est un portfolio, pas le Pentagone 😄",
+    "pingStats": "4 paquets transmis, 4 reçus, 0% de perte",
+    "slJoke": "tu voulais dire « ls », non ? profite du train quand même 🚂",
+    "topHeader": "tâches : 6 en cours · charge moyenne : 0.42, 0.37, 0.31",
+    "topFooter": "appuie sur q pour quitter (t'inquiète, c'est déjà fini)",
+    "coffee": "HTTP 418 — je suis une théière. Café en préparation quand même ☕",
+    "fortunes": [
+      "Les paroles ne coûtent rien. Montre-moi le code. — Linus Torvalds",
+      "Il n'y a que deux problèmes difficiles en info : l'invalidation de cache et nommer les choses.",
+      "Ça marche sur ma machine. ¯\\_(ツ)_/¯",
+      "Des semaines de code peuvent t'épargner des heures de planification.",
+      "D'abord, résous le problème. Ensuite, écris le code.",
+      "Un bon développeur regarde des deux côtés avant de traverser une rue à sens unique."
+    ],
+    "logsBoot": "== journalctl -b (portfolio.os) ==",
+    "logsHint": "→ clique une ligne marquée ⓘ pour révéler une anecdote",
+    "logs": {
+      "l1": "module personnalité chargé",
+      "a1": "J'ai commencé à coder à 14 ans, en bidouillant des mods Minecraft avant même de savoir ce qu'était une variable.",
+      "l2": "montage de /coffee",
+      "a2": "Ce portfolio a été alimenté par environ un expresso par composant.",
+      "l3": "démon side-projects initialisé",
+      "a3": "J'ai un dossier de projets à moitié finis. Celui-là a vraiment été livré.",
+      "l4": "mode sombre activé par défaut",
+      "a4": "Je ne peux physiquement pas utiliser un IDE en thème clair. Mes yeux ont porté plainte.",
+      "l5": "42 onglets non lus détectés",
+      "a5": "Oui, je suis comme ça. Les onglets, c'est de la « recherche ». Ils ne seront jamais lus."
+    },
     "notFound": "command not found: {name} — tape 'help'",
     "dateLocale": "fr-FR"
   }

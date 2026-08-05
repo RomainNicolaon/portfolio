@@ -45,6 +45,18 @@
   --c-neon: 0 229 255;
 }
 
+/* Thème secret « synthwave » — néons rose/violet sur fond nuit, débloqué au Konami code. */
+[data-theme='synthwave'] {
+  --c-bg: 15 8 26;
+  --c-panel: 26 14 43;
+  --c-border: 60 30 82;
+  --c-dim: 140 74 168;
+  --c-muted: 197 143 214;
+  --c-green: 244 114 182;
+  --c-bright: 249 168 212;
+  --c-neon: 255 0 200;
+}
+
 @layer base {
   html {
     background-color: var(--term-bg);
