@@ -39,10 +39,10 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
 </script>
 
 <template>
-  <div ref="root" class="relative">
+  <div ref="root" class="relative shrink-0">
     <button
       type="button"
-      class="inline-flex h-7 items-center rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+      class="inline-flex h-7 shrink-0 items-center whitespace-nowrap rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
       :aria-expanded="open"
       :aria-label="t('settings.aria')"
       :title="t('settings.title')"

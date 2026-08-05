@@ -26,9 +26,9 @@ const links = [
   <nav
     class="sticky top-0 z-40 border-b border-term-border bg-term-panel/90 backdrop-blur supports-[backdrop-filter]:bg-term-panel/70"
   >
-    <div class="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2 text-sm">
+    <div class="mx-auto flex max-w-6xl 2xl:max-w-7xl items-center justify-between gap-4 px-4 py-2 text-sm">
       <div class="flex min-w-0 items-center gap-3">
-        <span class="flex items-center gap-1.5" aria-hidden="true">
+        <span class="flex shrink-0 items-center gap-1.5" aria-hidden="true">
           <span class="h-3 w-3 rounded-full bg-red-500/80" />
           <span class="h-3 w-3 rounded-full bg-yellow-500/80" />
           <span class="h-3 w-3 rounded-full bg-term-green" />
@@ -39,7 +39,7 @@ const links = [
         </NuxtLink>
       </div>
 
-      <ul class="hidden items-center gap-5 lg:flex">
+      <ul class="hidden items-center gap-4 xl:flex">
         <li v-for="link in links" :key="link.href">
           <NuxtLink :to="home + link.href" class="text-term-muted transition-colors hover:text-term-bright">{{
             link.label
@@ -54,8 +54,8 @@ const links = [
         </li>
       </ul>
 
-      <div class="flex items-center gap-2">
-        <div class="hidden items-center gap-2 text-xs text-term-dim lg:flex">
+      <div class="flex shrink-0 items-center gap-2">
+        <div class="hidden items-center gap-2 text-xs text-term-dim 2xl:flex">
           <ClientOnly>
             <span>{{ time }}</span>
             <template #fallback><span>--:--:--</span></template>
@@ -64,7 +64,7 @@ const links = [
         <ClientOnly>
           <button
             type="button"
-            class="hidden h-7 items-center gap-1 rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
+            class="hidden h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright sm:flex"
             :aria-label="t('nav.openPalette')"
             :title="t('nav.paletteTitle')"
             @click="palette.toggle()"
@@ -75,7 +75,7 @@ const links = [
         </ClientOnly>
         <NuxtLink
           :to="switchLocalePath(locale === 'en' ? 'fr' : 'en')"
-          class="flex h-7 items-center gap-1 rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
+          class="flex h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright"
           :aria-label="locale === 'en' ? 'Passer en français' : 'Switch to English'"
         >
           <span :class="locale === 'fr' ? 'text-term-bright' : ''">FR</span>
@@ -87,7 +87,7 @@ const links = [
         </ClientOnly>
         <button
           type="button"
-          class="inline-flex h-7 items-center rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright lg:hidden"
+          class="inline-flex h-7 shrink-0 items-center whitespace-nowrap rounded border border-term-border px-2 text-xs text-term-muted transition-colors hover:border-term-green hover:text-term-bright xl:hidden"
           :aria-expanded="open"
           :aria-label="t('nav.navAria')"
           @click="open = !open"
@@ -97,8 +97,8 @@ const links = [
       </div>
     </div>
 
-    <div v-if="open" class="border-t border-term-border bg-term-panel lg:hidden">
-      <ul class="mx-auto flex max-w-5xl flex-col gap-1 px-4 py-3">
+    <div v-if="open" class="border-t border-term-border bg-term-panel xl:hidden">
+      <ul class="mx-auto flex max-w-6xl 2xl:max-w-7xl flex-col gap-1 px-4 py-3">
         <li v-for="link in links" :key="link.href">
           <NuxtLink
             :to="home + link.href"
