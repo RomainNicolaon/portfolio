@@ -57,6 +57,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
       <PongGame v-if="arcade.active.value === 'pong'" />
       <CommandPalette />
       <AppToast />
+      <CrtPowerFx />
+      <StatusBar />
     </ClientOnly>
 
     <TheNav />

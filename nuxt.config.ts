@@ -69,6 +69,7 @@ export default defineNuxtConfig({
   },
 
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       htmlAttrs: { lang: 'fr', class: 'scroll-smooth' },
       bodyAttrs: {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { theme, sound, motion, ambient, secretUnlocked } = useSettings()
+const { theme, sound, motion, ambient, statusbar, secretUnlocked } = useSettings()
 const { click } = useSound()
 const { t } = useI18n()
 const open = ref(false)
@@ -30,6 +30,11 @@ function toggleMotion() {
 
 function toggleAmbient() {
   ambient.value = !ambient.value
+  click()
+}
+
+function toggleStatusbar() {
+  statusbar.value = !statusbar.value
   click()
 }
 
@@ -106,6 +111,15 @@ onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
         >
           <span>{{ t('settings.ambient') }}</span>
           <span :class="ambient ? 'text-term-green' : 'text-term-dim'">{{ ambient ? t('settings.on') : t('settings.off') }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="flex w-full items-center justify-between rounded border border-term-border px-3 py-2.5 text-term-muted transition-colors hover:border-term-green"
+          @click.stop="toggleStatusbar"
+        >
+          <span>{{ t('settings.statusbar') }}</span>
+          <span :class="statusbar ? 'text-term-green' : 'text-term-dim'">{{ statusbar ? t('settings.on') : t('settings.off') }}</span>
         </button>
       </div>
     </div>
