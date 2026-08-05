@@ -30,16 +30,17 @@ const taglines = profile.taglines.length ? profile.taglines : [profile.title]
 
         <p class="text-sm text-term-dim"><span class="text-term-green">$</span> whoami</p>
 
-        <h1
-          class="glitch mt-3 text-4xl font-extrabold text-term-bright text-glow sm:text-6xl"
-          :data-text="profile.name"
-        >
-          {{ profile.name }}
+        <h1 class="mt-3">
+          <span
+            class="glitch block text-4xl font-extrabold text-term-bright text-glow sm:text-6xl"
+            :data-text="profile.name"
+          >
+            {{ profile.name }}
+          </span>
+          <span class="mt-3 block text-lg font-normal text-term-muted sm:text-2xl">
+            <span class="text-term-dim" aria-hidden="true">&gt;</span> {{ profile.title }}
+          </span>
         </h1>
-
-        <p class="mt-3 text-lg text-term-muted sm:text-2xl">
-          <span class="text-term-dim">&gt;</span> {{ profile.title }}
-        </p>
 
         <p class="mt-6 text-sm text-term-dim">
           <span class="text-term-green">$</span> ./run --tagline
