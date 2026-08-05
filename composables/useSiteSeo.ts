@@ -3,7 +3,7 @@ import * as en from '~/data/portfolio.en'
 
 export function useSiteSeo() {
   const config = useRuntimeConfig()
-  const { locale, locales } = useI18n()
+  const { locale, locales, t } = useI18n()
 
   const data = locale.value === 'en' ? en : fr
   const { profile, education, experiences, faq, skills } = data
@@ -21,6 +21,7 @@ export function useSiteSeo() {
   const seoDescription = profile.about[0] || profile.taglines[0] || 'Portfolio'
   const seoUrl = `${base}${homePath}`
   const seoImage = `${base}/og-image.png`
+  const seoImageAlt = t('seo.ogImageAlt', { title: seoTitle, name: seoName })
 
   const sameAs = profile.socials.map((s) => s.url).filter(Boolean)
   const knowsAbout = skills.flatMap((group) => group.items)
@@ -125,10 +126,12 @@ export function useSiteSeo() {
     ogTitle: seoTitle,
     ogDescription: seoDescription,
     ogImage: seoImage,
+    ogImageAlt: seoImageAlt,
     twitterCard: 'summary_large_image',
     twitterTitle: seoTitle,
     twitterDescription: seoDescription,
     twitterImage: seoImage,
+    twitterImageAlt: seoImageAlt,
   })
 
   useHead({

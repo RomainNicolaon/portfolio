@@ -1,4 +1,7 @@
 {
+  "seo": {
+    "ogImageAlt": "{title} — image de partage du portfolio de {name}"
+  },
   "nav": {
     "about": "./about",
     "experience": "./experience",
@@ -139,7 +142,8 @@
     "gitClone": "git clone ↗",
     "demo": "./demo ↗",
     "private": "Projet privé — pas de lien public.",
-    "back": "← retour aux projets"
+    "back": "← retour aux projets",
+    "ogImageAlt": "Aperçu du projet {name} — portfolio de {author}"
   },
   "terminal": {
     "hint": "Tape 'help' pour lister les commandes disponibles.",

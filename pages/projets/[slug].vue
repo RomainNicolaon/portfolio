@@ -20,6 +20,9 @@ const url = `${base}${localePath(`/projets/${slug}`)}`
 const hasSource = !!project.links.source && project.status !== 'privé'
 const hasDemo = !!project.links.demo && project.links.demo !== '#' && project.status !== 'privé'
 
+const ogImage = `${base}/og/${slug}.png`
+const ogImageAlt = t('projectPage.ogImageAlt', { name: project.name, author: profile.name })
+
 useSeoMeta({
   title: t('projectPage.metaTitle', { name: project.name, author: profile.name }),
   description: project.description,
@@ -27,9 +30,11 @@ useSeoMeta({
   ogDescription: project.description,
   ogUrl: url,
   ogType: 'article',
-  ogImage: `${base}/og/${slug}.png`,
+  ogImage: ogImage,
+  ogImageAlt: ogImageAlt,
   twitterCard: 'summary_large_image',
-  twitterImage: `${base}/og/${slug}.png`,
+  twitterImage: ogImage,
+  twitterImageAlt: ogImageAlt,
 })
 
 useHead({
