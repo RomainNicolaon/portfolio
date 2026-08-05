@@ -64,25 +64,12 @@ jobs:
 
       - name: Deploy with rsync
         run: |
-          # Réessaie en cas de coupure réseau transitoire ; rsync reprend
-          # le transfert grâce à --partial. Keepalives SSH + timeout élargi
-          # évitent l'abandon quand le serveur est momentanément lent.
-          attempt=0
-          max_attempts=3
-          until rsync --timeout=180 --partial --compress \
-            -e "ssh -p ${{ secrets.SSH_PORT || '22' }} -o StrictHostKeyChecking=no -o ServerAliveInterval=15 -o ServerAliveCountMax=8 -i ~/.ssh/id_rsa" \
+          rsync --timeout=60 \
+            -e "ssh -p ${{ secrets.SSH_PORT || '22' }} -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" \
             --exclude=".git" --exclude=".htaccess" --exclude=".env" \
             --exclude="node_modules" --exclude="uploads" --exclude="logs" \
             -av --delete .output/ \
-            "${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.DEPLOY_PATH }}"; do
-            attempt=$((attempt + 1))
-            if [ "$attempt" -ge "$max_attempts" ]; then
-              echo "rsync a échoué après $max_attempts tentatives." >&2
-              exit 1
-            fi
-            echo "rsync a échoué (tentative $attempt/$max_attempts), nouvelle tentative dans 15 s…" >&2
-            sleep 15
-          done
+            "${{ secrets.CPANEL_USERNAME }}@${{ secrets.CPANEL_SERVER }}:/home/${{ secrets.CPANEL_USERNAME }}/${{ secrets.DEPLOY_PATH }}"
 
       - name: Clean SSH keys
         if: always()
