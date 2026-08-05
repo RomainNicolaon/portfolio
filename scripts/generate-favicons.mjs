@@ -32,8 +32,33 @@ for (const { file, size } of pngTargets) {
   await writeFile(resolve(publicDir, file), buf)
 }
 
+// Icônes PWA référencées par public/site.webmanifest (installabilité + maskable).
+// L'icône maskable ajoute une marge pour survivre au recadrage de la « safe zone ».
+const bg = '#0a0e0a'
+const pwaTargets = [
+  { file: 'icon-192.png', size: 192, padding: 0 },
+  { file: 'icon-512.png', size: 512, padding: 0 },
+  { file: 'icon-maskable-512.png', size: 512, padding: 96 },
+]
+
+for (const { file, size, padding } of pwaTargets) {
+  const inner = size - padding * 2
+  const glyph = await sharp(svg, { density: 384 })
+    .resize(inner, inner, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer()
+
+  await sharp({
+    create: { width: size, height: size, channels: 4, background: bg },
+  })
+    .composite([{ input: glyph, gravity: 'center' }])
+    .png()
+    .toFile(resolve(publicDir, file))
+}
+
 // favicon.ico multi-tailles (16/32/48) pour la requête /favicon.ico des navigateurs.
 const ico = await pngToIco([buffers[16], buffers[32], buffers[48]])
 await writeFile(resolve(publicDir, 'favicon.ico'), ico)
 
 console.log('✓ Favicons générés :', pngTargets.map((t) => t.file).join(', '), '+ favicon.ico')
+console.log('✓ Icônes PWA générées :', pwaTargets.map((t) => t.file).join(', '))

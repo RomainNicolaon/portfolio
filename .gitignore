@@ -29,3 +29,8 @@ public/favicon-32x32.png
 public/favicon-48x48.png
 public/favicon-96x96.png
 public/apple-touch-icon.png
+
+# Icônes PWA générées au build (source : public/favicon.svg)
+public/icon-192.png
+public/icon-512.png
+public/icon-maskable-512.png
