@@ -1,4 +1,4 @@
-export type ArcadeGame = 'snake' | null
+export type ArcadeGame = 'snake' | 'tetris' | 'breakout' | 'pong' | null
 
 // État global du mini-jeu affiché en overlay (déclenché depuis le terminal).
 export function useArcade() {
