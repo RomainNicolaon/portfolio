@@ -21,3 +21,11 @@ logs
 
 # Images OG générées au build
 public/og
+
+# Favicons rasterisés générés au build (source : public/favicon.svg)
+public/favicon.ico
+public/favicon-16x16.png
+public/favicon-32x32.png
+public/favicon-48x48.png
+public/favicon-96x96.png
+public/apple-touch-icon.png
