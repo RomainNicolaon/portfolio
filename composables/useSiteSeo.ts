@@ -110,6 +110,7 @@ export function useSiteSeo() {
       ...(familyName ? { familyName } : {}),
       ...(alternateName.length ? { alternateName } : {}),
       url: `${base}/`,
+      mainEntityOfPage: { '@id': `${seoUrl}#profilepage` },
       ...(profile.title ? { jobTitle: profile.title } : {}),
       ...(profile.about[0] ? { description: profile.about[0] } : {}),
       ...(profile.email ? { email: `mailto:${profile.email}` } : {}),
@@ -156,6 +157,7 @@ export function useSiteSeo() {
 
   useHead({
     meta: [{ property: 'profile:first_name', content: seoName.split(' ')[0] || '' }],
+    link: sameAs.map((href) => ({ rel: 'me', href })),
     script: [
       {
         type: 'application/ld+json',

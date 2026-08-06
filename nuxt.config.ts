@@ -38,6 +38,11 @@ export default defineNuxtConfig({
     // Fraîcheur : lastmod = date de build ; recrawl plus rapide côté Google.
     autoLastmod: true,
     defaults: { changefreq: 'weekly', priority: 0.7 },
+    // La page d'accueil est l'URL prioritaire pour la requête « nom ».
+    urls: [
+      { loc: '/', priority: 1.0, changefreq: 'weekly' },
+      { loc: '/en', priority: 0.9, changefreq: 'weekly' },
+    ],
   },
 
   runtimeConfig: {
