@@ -93,6 +93,15 @@ export const experiences: Experience[] = [
 
 export const projects: Project[] = [
   {
+    name: 'cv-creator',
+    description:
+      "Générateur de CV en PDF construit avec Nuxt : choix parmi 8 thèmes, édition en direct, import de photo, personnalisation (couleur, police, sections) et export PDF via l'impression du navigateur.",
+    year: '2026',
+    status: 'actif',
+    tags: ['Nuxt', 'Vue', 'Tailwind', 'TypeScript'],
+    links: { demo: null, source: 'https://github.com/RomainNicolaon/cv-creator' },
+  },
+  {
     name: 'terminal-portfolio',
     description:
       'Portfolio personnel au style terminal, en Nuxt avec données TypeScript et Tailwind CSS.',

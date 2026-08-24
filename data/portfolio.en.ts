@@ -94,6 +94,8 @@ export const experiences: Experience[] = [
 ]
 
 const descriptionsEn: Record<string, string> = {
+  'cv-creator':
+    'PDF résumé generator built with Nuxt: pick from 8 themes, edit live, import a photo, customize (accent color, font, sections) and export to PDF via the browser print dialog.',
   'terminal-portfolio':
     'Personal terminal-styled portfolio, built with Nuxt, TypeScript data and Tailwind CSS.',
   'inleed-cms':
